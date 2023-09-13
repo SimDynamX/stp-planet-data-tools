@@ -1,0 +1,13 @@
+PROJCS["Io_Gnomonic_Eq180",
+    GEOGCS["Io 2000",
+        DATUM["D_Io_2000",
+            SPHEROID["1821600_2000_IAU_IAG",1821600,0.0]],
+        PRIMEM["Greenwich",0],
+        UNIT["Decimal_Degree",0.0174532925199433]],
+    PROJECTION["Gnomonic"],
+    PARAMETER["False_Easting",0],
+    PARAMETER["False_Northing",0],
+    PARAMETER["Longitude_of_Center",180],
+    PARAMETER["Scale_Factor",1],
+    PARAMETER["Latitude_Of_Origin",0],
+    UNIT["Meter",1]]
