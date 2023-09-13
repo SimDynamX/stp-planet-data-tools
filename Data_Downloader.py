@@ -156,7 +156,7 @@ def sc_urlretrieve(url, filename=None, reporthook=None, data=None):
     #https://stackoverflow.com/a/65860355  ?
     #https://stackoverflow.com/a/52117844
     #https://stackoverflow.com/a/44316583
-    ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+    ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS)
     with contextlib.closing(urllib.request.urlopen(url, data, context=ssl_context)) as fp:
                                             # My change here! ^^^^^^^^^^^^^^^^^^^^^^ 
         headers = fp.info()
