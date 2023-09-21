@@ -24,6 +24,7 @@ EXPECTED_REL_PATH_TO_ANCHOR = "Tools/."
 # extra_commands = ["install gdal>=2.2.2 --global-option=build_ext --global-option=\"-IC:/OSGeo4W64/include/\" --global-option=\"-LC:/OSGeo4W64/lib/\""]
 # Do this instead for gdal: https://www.youtube.com/watch?v=8iCWUp7WaTk
 # https://www.lfd.uci.edu/~gohlke/pythonlibs/
+# For Example: .\Tools\sc_tools_env\for_windows\Scripts\python.exe -m pip install .\GDAL_Wheels\GDAL-3.4.3-cp311-cp311-win_amd64.whl
 sc.easy_AutoVenv(__file__, EXPECTED_REL_PATH_TO_ANCHOR)
 
 #######################################
