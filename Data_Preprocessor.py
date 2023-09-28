@@ -311,7 +311,7 @@ if __name__ == "__main__":
     Gnomonic_Warp_Global([path.join("Saturn", "Enceladus","Global","enceladus_2019pm_radius.tif")], \
         252100, "enceladus_gnom", pbar, meters_per_pixel=2200)
     Gnomonic_Warp_Global([path.join("Saturn", "Enceladus","Global","Enceladus_Cassini_ISS_Global_Mosaic_100m_HPF.tif")], \
-        252100, "enceladus_gnom", pbar, meters_per_pixel=2200)
+        252100, "enceladus_gnom", pbar, meters_per_pixel=100)
     Gnomonic_Warp_Global([path.join("Saturn", "Enceladus","Global","enceladus_2019pm_nps_radius.tif")], \
         252100, "enceladus_gnom", pbar, meters_per_pixel=2200)
     Gnomonic_Warp_Global([path.join("Saturn", "Enceladus","Global","enceladus_2019pm_sps_radius.tif")], \
