@@ -365,6 +365,9 @@ if __name__ == "__main__":
 
     # Gnomonic_Warp_Global([path.join("Venus","Global","Venus_Magellan_C3-MDIR_Colorized_Global_Mosaic_4641m.tif")], \
     #     6.0518e6, "venus_gnom", pbar, meters_per_pixel=4641) # Artist Colorized
+    
+    Gnomonic_Warp_Global([path.join("Venus","Global","Venus_Magellan_C3-MDIR_Global_Mosaic_2025m.tif")], \
+        6.0518e6, "venus_gnom", pbar, meters_per_pixel=2025)
 
     # Earth
     
