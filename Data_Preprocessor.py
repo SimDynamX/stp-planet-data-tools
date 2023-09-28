@@ -566,6 +566,11 @@ if __name__ == "__main__":
             Gnomonic_Warp([path.join("Earth","Local","Himalayas", f"HMA_DEM8m_MOS_20170716_tile-{i}.tif")], \
                 6.378137e6, "earth_gnom", "Eq_90", pbar, meters_per_pixel=8, nodata_val=float_nodata)
 
+    if True:
+        #677 is Everest; others are surroundings
+        Gnomonic_Warp([path.join("Earth","Local","Himalayas", f"HMA_DEM8m_MOS_20170716_tile-677.tif")], \
+            6.378137e6, "earth_gnom", "Eq_90", pbar, meters_per_pixel=8, nodata_val=float_nodata)
+            
     if False:
         Gnomonic_Warp([path.join("Earth","Local","Caucasus", "dem_200_000.tif")], \
             6.378137e6, "earth_gnom", "NPole", pbar, meters_per_pixel=50, nodata_val=float_nodata)
