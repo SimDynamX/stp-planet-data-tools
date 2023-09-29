@@ -171,6 +171,9 @@ def Gnomonic_Warp_Global(inputFiles: list, radius: float, prjFileRoot: str, \
 # large_datasets_mpp_mult = 1
 large_datasets_mpp_mult = 4
 
+DOWNSAMPLE_2X = 2
+DOWNSAMPLE_4X = 4
+
 # Nodata value is usually 0, but it's different for some things:
 int16_nodata = -32768 # Datasets are usually consistent about this
 uint16_nodata = 0
@@ -229,7 +232,8 @@ if __name__ == "__main__":
     # This one is at least close to color-accurate.
     Gnomonic_Warp_Global([path.join("Mars","Global","Mars_Viking_ClrMosaic_global_925m.tif")], \
         3396190.0, "mars_gnom", pbar, meters_per_pixel=925)
-        
+    
+    # Jezero
     Gnomonic_Warp([path.join("Mars","Local","Jezero","J03_045994_1986_J03_046060_1986_20m_DTM.tif")], \
         3396190.0, "mars_gnom", "Eq_90", pbar, meters_per_pixel=20, nodata_val=float_nodata)
     Gnomonic_Warp([path.join("Mars","Local","Jezero","J03_045994_1986_XN_18N282W_6m_ORTHO.tif")], \
@@ -238,8 +242,50 @@ if __name__ == "__main__":
         3396190.0, "mars_gnom", "Eq_90", pbar, meters_per_pixel=0.25 * large_datasets_mpp_mult)
     Gnomonic_Warp([path.join("Mars","Local","Jezero","DTEEC_045994_1985_046060_1985_U01.IMG")], \
         3396190.0, "mars_gnom", "Eq_90", pbar, meters_per_pixel=1, nodata_val=float_nodata)
+    # Gale
+    Gnomonic_Warp([path.join("Mars","Local","Gale","MSL_Gale_DEM_Mosaic_1m_v3.tif")], \
+        3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=1 * DOWNSAMPLE_4X, nodata_val=float_nodata)
+    # InSight
+    Gnomonic_Warp([path.join("Mars","Local","InSight","D06_029601_1846_F05_037684_1857_20m_DTM_destripe.tif")], \
+        3396190.0, "mars_gnom", "Eq_90", pbar, meters_per_pixel=20, nodata_val=float_nodata)
+    Gnomonic_Warp([path.join("Mars","Local","InSight","D06_029601_1846_F05_037684_1857_20m_DTM_destripe.tif")], \
+        3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=20, nodata_val=float_nodata)
     
-    #TODO Gale, InSight, LavaFlows, Misc datasets
+    Gnomonic_Warp([path.join("Mars","Local","InSight","D18_034071_1842_D18_034216_1845_20m_DTM.tif")], \
+        3396190.0, "mars_gnom", "Eq_90", pbar, meters_per_pixel=20, nodata_val=float_nodata)
+    Gnomonic_Warp([path.join("Mars","Local","InSight","D18_034071_1842_D18_034216_1845_20m_DTM.tif")], \
+        3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=20, nodata_val=float_nodata)
+    
+    Gnomonic_Warp([path.join("Mars","Local","InSight","D18_034150_1838_D17_033728_1838_20m_DTM_destripe.tif")], \
+        3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=20, nodata_val=float_nodata)
+    Gnomonic_Warp([path.join("Mars","Local","InSight","D18_034427_1842_D17_033939_1843_20m_DTM.tif")], \
+        3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=20, nodata_val=float_nodata)
+    Gnomonic_Warp([path.join("Mars","Local","InSight","D19_034783_1864_D20_034928_1864_20m_DTM_destripe.tif")], \
+        3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=20, nodata_val=float_nodata)
+    Gnomonic_Warp([path.join("Mars","Local","InSight","F02_036695_1843_D02_028045_1831_20m_DTM_destripe.tif")], \
+        3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=20, nodata_val=float_nodata)
+    Gnomonic_Warp([path.join("Mars","Local","InSight","F02_036761_1828_F04_037262_1841_20m_DTM_destripe.tif")], \
+        3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=20, nodata_val=float_nodata)
+    # LavaFlows
+    Gnomonic_Warp([path.join("Mars","Local","LavaFlows","DEM_18m_Cerberus_Palus_wrinkle_ridge.tif")], \
+        3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=18, nodata_val=float_nodata)
+    Gnomonic_Warp([path.join("Mars","Local","LavaFlows","DEM_18m_Lethe_Vallis.tif")], \
+        3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=18, nodata_val=float_nodata)
+    Gnomonic_Warp([path.join("Mars","Local","LavaFlows","DEM_18m_N_Kasei_Valles_distal_flow.tif")], \
+        3396190.0, "mars_gnom", "Eq_270", pbar, meters_per_pixel=18, nodata_val=float_nodata)
+    Gnomonic_Warp([path.join("Mars","Local","LavaFlows","DEM_18m_North_Kasei_Valles_cataract.tif")], \
+        3396190.0, "mars_gnom", "Eq_270", pbar, meters_per_pixel=18, nodata_val=float_nodata)
+    Gnomonic_Warp([path.join("Mars","Local","LavaFlows","DEM_18m_NW_Kasei_Constriction.tif")], \
+        3396190.0, "mars_gnom", "Eq_270", pbar, meters_per_pixel=18, nodata_val=float_nodata)
+    # Misc datasets
+    Gnomonic_Warp([path.join("Mars","Local","Misc","B18_016575_1978_B17_016219_1978_20m_DTM.tif")], \
+        3396190.0, "mars_gnom", "Eq_90", pbar, meters_per_pixel=20, nodata_val=float_nodata)
+    Gnomonic_Warp([path.join("Mars","Local","Misc","D21_035237_2021_F01_036358_2020_20m_DTM.tif")], \
+        3396190.0, "mars_gnom", "Eq_0", pbar, meters_per_pixel=20, nodata_val=float_nodata)
+    Gnomonic_Warp([path.join("Mars","Local","Misc","F21_043907_1652_F21_043841_1654_20m_DTM.tif")], \
+        3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=20, nodata_val=float_nodata)
+    Gnomonic_Warp([path.join("Mars","Local","Misc","P14_006633_2018_P17_007556_2012_20m_DTM_destripe.tif")], \
+        3396190.0, "mars_gnom", "Eq_90", pbar, meters_per_pixel=20, nodata_val=float_nodata)
 
     ########################
     ### WORK IN PROGRESS ###
