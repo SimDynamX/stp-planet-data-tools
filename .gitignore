@@ -119,3 +119,6 @@ Tools/imgui.ini
 Tools/sc_tools_env/*
 
 Stars/StarShader2/out/*
+
+# Ignore the venv
+/venv
