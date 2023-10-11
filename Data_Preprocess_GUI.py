@@ -47,7 +47,7 @@ from osgeo import gdal
 
 from shutil import copyfile
 from colorama import Fore, Back, Style
-import progressbar as pb
+# import progressbar as pb
 
 from PySide2.QtWidgets import (QApplication, QVBoxLayout, QWidget, QPushButton, 
                                QFileDialog, QListWidget, QDoubleSpinBox, QLineEdit, 
@@ -90,9 +90,9 @@ def playGreeting():
     print("---------------------")
 
 
-def progress_callback(complete, message, data):
+def progress_callback(complete, message, data: QProgressBar):
     percent = int(complete * 100)  # round to integer percent
-    data.update(percent)  # update the progressbar
+    data.setValue(percent)  # update the progressbar
     return 1
 
 
@@ -101,7 +101,7 @@ def Gnomonic_Warp(
     radius: float,
     prjFileRoot: str,
     prjFileSide: str,
-    progBar: pb.ProgressBar,
+    progBar: QProgressBar,
     meters_per_pixel=0.0,
     forceFullSideExtents=False,
     input_nodata_val=None,
@@ -118,8 +118,10 @@ def Gnomonic_Warp(
     inpath = []
 
     for inputFile in inputFiles:
-        inpath.append(path.join(inputDir, inputFile))
-    outpath = path.join(outputDir, inputFiles[0])
+        inputFile_relative = path.relpath(inputFile, inputDir)
+        inpath.append(path.join(inputDir, inputFile_relative))
+    
+    outpath = path.join(outputDir, path.relpath(inputFiles[0], inputDir))
     outpath_split = path.splitext(outpath)
     # outpath = outpath_split[0] + "_Gnom_" + prjFileSide + outpath_split[1]
     outpath = outpath_split[0] + "_Gnom_" + prjFileSide + ".tif"
@@ -164,16 +166,16 @@ def Gnomonic_Warp(
                 callback_data=progBar,
             )
 
-    progBar.start()
+    # progBar.start()
     gdal.Warp(outpath, inpath, options=warpoptions)
-    progBar.finish()
+    # progBar.finish()
 
 
 def Gnomonic_Warp_Global(
     inputFiles: list,
     radius: float,
     prjFileRoot: str,
-    progBar: pb.ProgressBar,
+    progBar: QProgressBar,
     meters_per_pixel=0.0,
     input_nodata_val=None,
     nodata_val=0,
@@ -266,26 +268,89 @@ class AppGUI(QWidget):
         layout.addWidget(self.file_list)
         layout.addWidget(add_file_btn)
 
-        # Widget for radius
-        self.radius_input = QDoubleSpinBox()
-        self.radius_input.setRange(0, 10000)  # Example range
-        layout.addWidget(QLabel("Radius:"))
-        layout.addWidget(self.radius_input)
+        # # Widget for radius
+        # self.radius_input = QDoubleSpinBox()
+        # self.radius_input.setRange(0, 10000)  # Example range
+        # layout.addWidget(QLabel("Radius:"))
+        # layout.addWidget(self.radius_input)
 
-        dic = {'earth':'earth_gnom', 'moon':'moon_gnom', 'mars':'mars_gnom'}
+        self.planet_data = {
+            'Ceres':{
+                'proj': 'ceres_gnom',
+                'radius': 473000.0
+            },
+            'Earth':{
+                'proj': 'earth_gnom',
+                'radius': 6.378137e6
+            },
+            'Enceladus':{
+                'proj': 'enceladus_gnom',
+                'radius': 252100.0
+            },
+            'Europa':{
+                'proj': 'europa_gnom',
+                'radius': 1560800.0
+            },
+            'Ganymede':{
+                'proj': 'ganymede_gnom',
+                'radius': 2634100.0
+            },
+            'Io':{
+                'proj': 'io_gnom',
+                'radius': 1821600.0
+            },
+            'Mars':{
+                'proj': 'mars_gnom',
+                'radius': 3396190.0
+            },
+            'Mercury':{
+                'proj': 'mercury_gnom',
+                'radius': 2493700.0
+            },
+            'Moon':{
+                'proj': 'moon_gnom',
+                'radius': 1737400.0
+            },
+            'Phobos':{
+                'proj': 'phobos_gnom',
+                'radius': 13000.0
+            },
+            'Pluto':{
+                'proj': 'pluto_gnom',
+                'radius': 1188300.0
+            },
+            'Titan':{
+                'proj': 'titan_gnom',
+                'radius': 2575150.0
+            },
+            'Triton':{
+                'proj': 'triton_gnom',
+                'radius': 1353400.0
+            },
+            'Venus':{
+                'proj': 'venus_gnom',
+                'radius': 6.0518e6
+            },
+            'Vesta':{
+                'proj': 'vesta_gnom',
+                'radius': 289000.0
+            },
+            }
         # Widgets for string inputs
         self.prjFileRoot_combo = QComboBox()
-        self.prjFileRoot_combo.addItems(["Option1_Root", "Option2_Root", "Option3_Root"])
+        self.prjFileRoot_combo.addItems(self.planet_data.keys())
         layout.addWidget(QLabel("Planet:"))
         layout.addWidget(self.prjFileRoot_combo)
 
         self.prjFileSide_combo = QComboBox()
-        self.prjFileSide_combo.addItems(["Eq_0", "Eq_90","Eq_180","Eq_270","NPole","SPole"])
+        self.prjFileSide_combo.addItems(["Eq_0", "Eq_90","Eq_180","Eq_270","NPole","SPole","Global"])
         layout.addWidget(QLabel("Side:"))
         layout.addWidget(self.prjFileSide_combo)
 
         # Progress Bar
         self.progBar = QProgressBar()
+        self.progBar.setRange(0, 100)
+        self.progBar.setValue(0)
         layout.addWidget(self.progBar)
 
         # Other parameters with default values (as example)
@@ -294,10 +359,25 @@ class AppGUI(QWidget):
         layout.addWidget(QLabel("Meters per Pixel:"))
         layout.addWidget(self.mpp_input)
 
-        self.forceFullSideExtents_chk = QCheckBox("Force Full Side Extents")
-        layout.addWidget(self.forceFullSideExtents_chk)
+    
+        # self.forceFullSideExtents_chk = QCheckBox("Force Full Side Extents")
+        # layout.addWidget(self.forceFullSideExtents_chk)
 
-        # Add more widgets as necessary...
+
+        # # Additional checkboxes for function selection
+        # self.run_gnomonic_warp_checkbox = QCheckBox("Run Gnomonic_Warp")
+        # self.run_gnomonic_warp_global_checkbox = QCheckBox("Run Gnomonic_Warp_Global")
+
+        # # By default, run Gnomonic_Warp is selected
+        # self.run_gnomonic_warp_checkbox.setChecked(True)
+
+        # layout.addWidget(self.run_gnomonic_warp_checkbox)
+        # layout.addWidget(self.run_gnomonic_warp_global_checkbox)
+
+        # # Connect the stateChanged signal for mutual exclusion
+        # self.run_gnomonic_warp_checkbox.stateChanged.connect(self.toggle_global_checkbox)
+        # self.run_gnomonic_warp_global_checkbox.stateChanged.connect(self.toggle_warp_checkbox)
+        
 
         # Submit button
         submit_btn = QPushButton("Submit")
@@ -306,6 +386,14 @@ class AppGUI(QWidget):
 
         self.setLayout(layout)
 
+    def toggle_global_checkbox(self):
+        if self.run_gnomonic_warp_checkbox.isChecked():
+            self.run_gnomonic_warp_global_checkbox.setChecked(False)
+
+    def toggle_warp_checkbox(self):
+        if self.run_gnomonic_warp_global_checkbox.isChecked():
+            self.run_gnomonic_warp_checkbox.setChecked(False)
+
     def add_file(self):
         file_name, _ = QFileDialog.getOpenFileName(self, "Open File")
         if file_name:
@@ -313,19 +401,24 @@ class AppGUI(QWidget):
 
     def submit(self):
         inputFiles = [self.file_list.item(i).text() for i in range(self.file_list.count())]
-        radius = self.radius_input.value()
-        prjFileRoot = self.prjFileRoot_input.text()
-        prjFileSide = self.prjFileSide_input.text()
+        planet_choice = self.prjFileRoot_combo.currentText()
+
+        radius = self.planet_data[planet_choice]['radius']
+        prjFileRoot = self.planet_data[planet_choice]['proj']
+        prjFileSide = self.prjFileSide_combo.currentText()
         progBar = self.progBar
         meters_per_pixel = self.mpp_input.value()
-        forceFullSideExtents = self.forceFullSideExtents_chk.isChecked()
-        # Add more parameters as needed
-
-        Gnomonic_Warp(
-            inputFiles, radius, prjFileRoot, prjFileSide, progBar, 
-            meters_per_pixel=meters_per_pixel, forceFullSideExtents=forceFullSideExtents
-        )
-        # Add more arguments as needed...
+        # forceFullSideExtents = self.forceFullSideExtents_chk.isChecked()
+        if self.prjFileSide_combo == "Global":
+            Gnomonic_Warp_Global(inputFiles,radius,prjFileRoot,progBar,
+            meters_per_pixel)#,input_nodata_val=None#,nodata_val=0)
+        else:
+            Gnomonic_Warp(
+                inputFiles, radius, prjFileRoot, prjFileSide, progBar, 
+                meters_per_pixel=meters_per_pixel, forceFullSideExtents=False
+            )
+            
+           
 
 
 # Use a larger multiplier here to avoid RAM issues with loading/storing the huge datasets
@@ -342,115 +435,6 @@ int32_nodata = -2147483648
 float_nodata = -1e32
 double_nodata = -1e32
 
-# if __name__ == "__main__":
-#     playGreeting()
-
-#     print("GDAL Version:", gdal.VersionInfo())
-
-#     pbar = pb.ProgressBar()
-
-#     # Moon Global
-#     Gnomonic_Warp_Global(
-#         [path.join("Moon", "Global", "Lunar_LRO_LOLA_Global_LDEM_118m_Mar2014.tif")],
-#         1737400.0,
-#         "moon_gnom",
-#         pbar,
-#         meters_per_pixel=118 * large_datasets_mpp_mult,
-#     )
-#     Gnomonic_Warp_Global(
-#         [
-#             path.join(
-#                 "Moon", "Global", "Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif"
-#             )
-#         ],
-#         1737400.0,
-#         "moon_gnom",
-#         pbar,
-#         meters_per_pixel=100 * large_datasets_mpp_mult,
-#     )
-#     # Moon Apollo Sites
-#     Gnomonic_Warp(
-#         [path.join("Moon", "Local", "Apollo17", "APOLLO17_DTM_150CM.TIFF")],
-#         1737400.0,
-#         "moon_gnom",
-#         "Eq_0",
-#         pbar,
-#         meters_per_pixel=1.5,
-#         nodata_val=float_nodata,
-#     )
-#     Gnomonic_Warp(
-#         [path.join("Moon", "Local", "Apollo17", "APOLLO17_ORTHOMOSAIC_50CM.TIFF")],
-#         1737400.0,
-#         "moon_gnom",
-#         "Eq_0",
-#         pbar,
-#         meters_per_pixel=0.5,
-#     )
-#     Gnomonic_Warp(
-#         [
-#             path.join(
-#                 "Moon", "Local", "Apollo15", "LRO_NAC_DEM_Apollo_15_26N004E_150cmp.tif"
-#             )
-#         ],
-#         1737400.0,
-#         "moon_gnom",
-#         "Eq_0",
-#         pbar,
-#         meters_per_pixel=1.5 * 2,
-#         nodata_val=float_nodata,
-#     )
-#     #     #TODO this ^ needs its nodata value set to our standardized value
-#     Gnomonic_Warp(
-#         [
-#             path.join(
-#                 "Moon", "Local", "Apollo15", "Moon_LRO_NAC_Mosaic_26N004E_50cmp.tif"
-#             )
-#         ],
-#         1737400.0,
-#         "moon_gnom",
-#         "Eq_0",
-#         pbar,
-#         meters_per_pixel=0.5 * 4,
-#     )
-#     # TODO this ^ is giving an error partway through:
-#     # ERROR 1: LZWDecode:Not enough data at scanline 47450 (short 53477 bytes)
-#     # ERROR 1: TIFFReadEncodedStrip() failed.
-#     # ERROR 1: C:\Users\conno\Documents\GitHub\PlanetDataTools\input\Moon\Local\Apollo15\Moon_LRO_NAC_Mosaic_26N004E_50cmp.tif,
-#     #    band 1: IReadBlock failed at X offset 0, Y offset 47450: TIFFReadEncodedStrip() failed.
-#     # Moon South Pole Altimetry
-#     Gnomonic_Warp(
-#         [path.join("Moon", "Local", "SouthPole", "LRO_LOLA_DEM_SPolar875_10m.tif")],
-#         1737400.0,
-#         "moon_gnom",
-#         "SPole",
-#         pbar,
-#         meters_per_pixel=10,
-#         nodata_val=int16_nodata,
-#     )
-#     Gnomonic_Warp(
-#         [path.join("Moon", "Local", "SouthPole", "LRO_LOLA_DEM_SPole75_30m.tif")],
-#         1737400.0,
-#         "moon_gnom",
-#         "SPole",
-#         pbar,
-#         meters_per_pixel=30,
-#         nodata_val=int16_nodata,
-#     )
-#     Gnomonic_Warp(
-#         [path.join("Moon", "Local", "SouthPole", "MOON_LRO_NAC_DEM_89S210E_4mp.tif")],
-#         1737400.0,
-#         "moon_gnom",
-#         "SPole",
-#         pbar,
-#         meters_per_pixel=4,
-#         nodata_val=float_nodata,
-#     )
-#     # Moon South Pole Overlay Data
-#     # Pending Data_Downloader links to these
-#     # Gnomonic_Warp(path.join("Moon","Local","SouthPole","SP_IceFavorabilityIndex.tif"), \
-#     #     1737400.0, "moon_gnom", "SPole", pbar, 591)
-#     # Gnomonic_Warp(path.join("Moon","Local","SouthPole","SP_TerrainType.tif"), \
-#     #     1737400.0, "moon_gnom", "SPole", pbar, 591)
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = AppGUI()
