@@ -215,6 +215,10 @@ if __name__ == "__main__":
         1737400.0, "moon_gnom", "SPole", pbar, meters_per_pixel=30, nodata_val=int16_nodata)
     Gnomonic_Warp([path.join("Moon","Local","SouthPole","MOON_LRO_NAC_DEM_89S210E_4mp.tif")], \
         1737400.0, "moon_gnom", "SPole", pbar, meters_per_pixel=4, nodata_val=float_nodata)
+    if(False):
+        # NASA internal upscaled crater 20cm dataset
+        Gnomonic_Warp([path.join("Moon","Local","SouthPole","LDEM_Site01-Site-04_upscale_craters.tif")], \
+            1737400.0, "moon_gnom", "SPole", pbar, meters_per_pixel=0.2, nodata_val=float_nodata)
     # Moon South Pole Overlay Data
     # Pending Data_Downloader links to these
     # Gnomonic_Warp(path.join("Moon","Local","SouthPole","SP_IceFavorabilityIndex.tif"), \
