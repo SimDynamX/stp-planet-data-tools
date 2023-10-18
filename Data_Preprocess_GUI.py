@@ -35,6 +35,7 @@ from os import path
 from sys import platform
 import sys
 import signal
+import re
 
 # import psutil
 import json
@@ -51,7 +52,7 @@ from colorama import Fore, Back, Style
 
 from PySide2.QtWidgets import (QApplication, QVBoxLayout, QWidget, QPushButton, 
                                QFileDialog, QListWidget, QDoubleSpinBox, QLineEdit, 
-                               QCheckBox, QProgressBar, QLabel, QComboBox)
+                               QCheckBox, QProgressBar, QLabel, QComboBox,QFileDialog, QMessageBox)
 
 #######################################
 ### GLOBALS ###########################
@@ -268,11 +269,16 @@ class AppGUI(QWidget):
         layout.addWidget(self.file_list)
         layout.addWidget(add_file_btn)
 
-        # # Widget for radius
-        # self.radius_input = QDoubleSpinBox()
-        # self.radius_input.setRange(0, 10000)  # Example range
-        # layout.addWidget(QLabel("Radius:"))
-        # layout.addWidget(self.radius_input)
+        # Reset button
+        clear_files = QPushButton("Clear File List")
+        clear_files.clicked.connect(self.reset_file_list)
+        layout.addWidget(clear_files)
+
+        # Button to get GDAL info
+        gdal_info_btn = QPushButton("Get GDAL Info")
+        gdal_info_btn.clicked.connect(self.display_gdal_info)
+        layout.addWidget(gdal_info_btn)
+
 
         self.planet_data = {
             'Ceres':{
@@ -336,6 +342,9 @@ class AppGUI(QWidget):
                 'radius': 289000.0
             },
             }
+        
+
+
         # Widgets for string inputs
         self.prjFileRoot_combo = QComboBox()
         self.prjFileRoot_combo.addItems(self.planet_data.keys())
@@ -358,31 +367,13 @@ class AppGUI(QWidget):
         self.mpp_input.setRange(0, 1000)  # Example range
         layout.addWidget(QLabel("Meters per Pixel:"))
         layout.addWidget(self.mpp_input)
-
-    
-        # self.forceFullSideExtents_chk = QCheckBox("Force Full Side Extents")
-        # layout.addWidget(self.forceFullSideExtents_chk)
-
-
-        # # Additional checkboxes for function selection
-        # self.run_gnomonic_warp_checkbox = QCheckBox("Run Gnomonic_Warp")
-        # self.run_gnomonic_warp_global_checkbox = QCheckBox("Run Gnomonic_Warp_Global")
-
-        # # By default, run Gnomonic_Warp is selected
-        # self.run_gnomonic_warp_checkbox.setChecked(True)
-
-        # layout.addWidget(self.run_gnomonic_warp_checkbox)
-        # layout.addWidget(self.run_gnomonic_warp_global_checkbox)
-
-        # # Connect the stateChanged signal for mutual exclusion
-        # self.run_gnomonic_warp_checkbox.stateChanged.connect(self.toggle_global_checkbox)
-        # self.run_gnomonic_warp_global_checkbox.stateChanged.connect(self.toggle_warp_checkbox)
         
 
         # Submit button
         submit_btn = QPushButton("Submit")
         submit_btn.clicked.connect(self.submit)
         layout.addWidget(submit_btn)
+
 
         self.setLayout(layout)
 
@@ -395,9 +386,14 @@ class AppGUI(QWidget):
             self.run_gnomonic_warp_checkbox.setChecked(False)
 
     def add_file(self):
-        file_name, _ = QFileDialog.getOpenFileName(self, "Open File")
+        script_dir = os.path.dirname(os.path.realpath(__file__)) + "/input"
+        file_name, _ = QFileDialog.getOpenFileName(self, "Open File", script_dir)
         if file_name:
             self.file_list.addItem(file_name)
+        print(gdal.Info(file_name))
+    
+    def reset_file_list(self):
+        self.file_list.clear()
 
     def submit(self):
         inputFiles = [self.file_list.item(i).text() for i in range(self.file_list.count())]
@@ -417,8 +413,57 @@ class AppGUI(QWidget):
                 inputFiles, radius, prjFileRoot, prjFileSide, progBar, 
                 meters_per_pixel=meters_per_pixel, forceFullSideExtents=False
             )
+    
             
-           
+    def display_gdal_info(self):
+        selected_items = self.file_list.selectedItems()
+        if not selected_items:
+            QMessageBox.information(self, "No file selected", "Please select a file to get GDAL info.")
+            return
+
+        file_name = selected_items[0].text()
+
+        # def parse_gdal_info(info):
+        # # Dictionary to store parsed data
+        #     parsed_info = {}
+
+        #     # Extract size
+        #     size_match = re.search(r"Size is (\d+), (\d+)", info)
+        #     if size_match:
+        #         parsed_info["Size"] = {"Width": size_match.group(1), "Height": size_match.group(2)}
+
+        #     # Extract Coordinate System
+        #     coord_sys_match = re.search(r"Coordinate System is:\n(.*?)\n(?:\n|$)", info, re.DOTALL)
+        #     if coord_sys_match:
+        #         parsed_info["Coordinate System"] = coord_sys_match.group(1).strip()
+
+        #     # Extract Origin
+        #     origin_match = re.search(r"Origin = \((.*?),(.*?)\)", info)
+        #     if origin_match:
+        #         parsed_info["Origin"] = {"X": origin_match.group(1), "Y": origin_match.group(2)}
+
+        #     # Extract Pixel Size
+        #     pixel_size_match = re.search(r"Pixel Size = \((.*?),(.*?)\)", info)
+        #     if pixel_size_match:
+        #         parsed_info["Pixel Size"] = {"X": pixel_size_match.group(1), "Y": pixel_size_match.group(2)}
+
+        #     # Extract Corner Coordinates
+        #     corner_coords_match = re.search(r"Corner Coordinates:\n(.*?)\n(?:\n|$)", info, re.DOTALL)
+        #     if corner_coords_match:
+        #         parsed_info["Corner Coordinates"] = corner_coords_match.group(1).strip()
+
+        #     # Extract Band Information
+        #     band_match = re.search(r"Band \d+ (.*?)\n(?:\n|$)", info, re.DOTALL)
+        #     if band_match:
+        #         parsed_info["Band Information"] = band_match.group(1).strip()
+
+        #     return parsed_info
+        try:
+            info = gdal.Info(file_name)
+            QMessageBox.information(self, "GDAL Info", info)
+            # print(parse_gdal_info(info))
+        except RuntimeError as e:
+            QMessageBox.critical(self, "Error", str(e))      
 
 
 # Use a larger multiplier here to avoid RAM issues with loading/storing the huge datasets
