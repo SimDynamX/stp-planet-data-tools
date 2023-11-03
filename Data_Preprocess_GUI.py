@@ -52,7 +52,11 @@ from colorama import Fore, Back, Style
 
 from PySide2.QtWidgets import (QApplication, QVBoxLayout, QWidget, QPushButton, 
                                QFileDialog, QListWidget, QDoubleSpinBox, QLineEdit, 
-                               QCheckBox, QProgressBar, QLabel, QComboBox,QFileDialog, QMessageBox)
+                               QCheckBox, QProgressBar, QLabel, QComboBox,QFileDialog, QMessageBox,
+                               QMainWindow, QDockWidget, QTextEdit)
+
+# from PyQt5.QtWidgets import QMainWindow, QDockWidget, QTextEdit, QListWidget
+from PyQt5.QtCore import QCoreApplication, Qt
 
 #######################################
 ### GLOBALS ###########################
@@ -128,9 +132,11 @@ def Gnomonic_Warp(
     outpath = outpath_split[0] + "_Gnom_" + prjFileSide + ".tif"
 
     if os.path.exists(outpath):
-        print("WARNING: there is already a file at " + outpath + "; skipped this warp.")
-        return
-    elif not path.exists(path.split(outpath)[0]):
+        # print("WARNING: there is already a file at " + outpath + "; skipped this warp.")
+        print("WARNING: there is already a file at " + outpath + "; that file will be replaced.")
+        # return
+        # NOTE: we always want to replace the existing files when using the GUI (probably)
+    if not path.exists(path.split(outpath)[0]):
         print('Making new output directory "' + path.split(outpath)[0] + '"')
         os.makedirs(path.split(outpath)[0])
 
@@ -275,9 +281,24 @@ class AppGUI(QWidget):
         layout.addWidget(clear_files)
 
         # Button to get GDAL info
+        # TODO: Add scroll bar to read the info 
         gdal_info_btn = QPushButton("Get GDAL Info")
         gdal_info_btn.clicked.connect(self.display_gdal_info)
         layout.addWidget(gdal_info_btn)
+
+        # self.info_dock_widget = QDockWidget("GDAL Info", self)
+        # self.info_dock_widget.setAllowedAreas(Qt.LeftDockWidgetArea | Qt.RightDockWidgetArea)
+
+        # # Create the widget to display the information
+        # self.info_text_edit = QTextEdit()
+        # self.info_text_edit.setReadOnly(True)
+
+        # # Set the widget to the dock
+        # self.info_dock_widget.setWidget(self.info_text_edit)
+
+        # # Add the dock widget to the main window
+        # self.addDockWidget(Qt.RightDockWidgetArea, self.info_dock_widget)
+
 
 
         self.planet_data = {
@@ -356,11 +377,7 @@ class AppGUI(QWidget):
         layout.addWidget(QLabel("Side:"))
         layout.addWidget(self.prjFileSide_combo)
 
-        # Progress Bar
-        self.progBar = QProgressBar()
-        self.progBar.setRange(0, 100)
-        self.progBar.setValue(0)
-        layout.addWidget(self.progBar)
+        
 
         # Other parameters with default values (as example)
         self.mpp_input = QDoubleSpinBox()
@@ -374,6 +391,16 @@ class AppGUI(QWidget):
         submit_btn.clicked.connect(self.submit)
         layout.addWidget(submit_btn)
 
+        # Progress Bar
+        self.progBar = QProgressBar()
+        self.progBar.setRange(0, 100)
+        self.progBar.setValue(0)
+        layout.addWidget(self.progBar)
+
+        # Create a quit button
+        self.quit_button = QPushButton('Quit', self)
+        self.quit_button.clicked.connect(QCoreApplication.instance().quit)
+        layout.addWidget(self.quit_button)  # Add other widgets as needed
 
         self.setLayout(layout)
 
@@ -386,7 +413,7 @@ class AppGUI(QWidget):
             self.run_gnomonic_warp_checkbox.setChecked(False)
 
     def add_file(self):
-        script_dir = os.path.dirname(os.path.realpath(__file__)) + "/input"
+        script_dir = os.path.dirname(os.path.realpath(__file__)) + "/input/Moon/Local/SouthPole/"
         file_name, _ = QFileDialog.getOpenFileName(self, "Open File", script_dir)
         if file_name:
             self.file_list.addItem(file_name)
@@ -422,46 +449,28 @@ class AppGUI(QWidget):
             return
 
         file_name = selected_items[0].text()
-
-        # def parse_gdal_info(info):
-        # # Dictionary to store parsed data
-        #     parsed_info = {}
-
-        #     # Extract size
-        #     size_match = re.search(r"Size is (\d+), (\d+)", info)
-        #     if size_match:
-        #         parsed_info["Size"] = {"Width": size_match.group(1), "Height": size_match.group(2)}
-
-        #     # Extract Coordinate System
-        #     coord_sys_match = re.search(r"Coordinate System is:\n(.*?)\n(?:\n|$)", info, re.DOTALL)
-        #     if coord_sys_match:
-        #         parsed_info["Coordinate System"] = coord_sys_match.group(1).strip()
-
-        #     # Extract Origin
-        #     origin_match = re.search(r"Origin = \((.*?),(.*?)\)", info)
-        #     if origin_match:
-        #         parsed_info["Origin"] = {"X": origin_match.group(1), "Y": origin_match.group(2)}
-
-        #     # Extract Pixel Size
-        #     pixel_size_match = re.search(r"Pixel Size = \((.*?),(.*?)\)", info)
-        #     if pixel_size_match:
-        #         parsed_info["Pixel Size"] = {"X": pixel_size_match.group(1), "Y": pixel_size_match.group(2)}
-
-        #     # Extract Corner Coordinates
-        #     corner_coords_match = re.search(r"Corner Coordinates:\n(.*?)\n(?:\n|$)", info, re.DOTALL)
-        #     if corner_coords_match:
-        #         parsed_info["Corner Coordinates"] = corner_coords_match.group(1).strip()
-
-        #     # Extract Band Information
-        #     band_match = re.search(r"Band \d+ (.*?)\n(?:\n|$)", info, re.DOTALL)
-        #     if band_match:
-        #         parsed_info["Band Information"] = band_match.group(1).strip()
-
-        #     return parsed_info
         try:
             info = gdal.Info(file_name)
-            QMessageBox.information(self, "GDAL Info", info)
-            # print(parse_gdal_info(info))
+            # Parsing the Origin, Pixel Size, and Corner Coordinates
+            origin_pattern = r"Origin = \(([^)]+)\)"
+            pixel_size_pattern = r"Pixel Size = \(([^)]+)\)"
+            corner_coordinates_pattern = r"Corner Coordinates:((?:\n.+)+?)(?=\n\s*Band|\n\s*NoData|\n\s*Overviews|\n\s*Metadata)"
+
+            
+            origin_match = re.search(origin_pattern, info)
+            pixel_size_match = re.search(pixel_size_pattern, info)
+            corner_coordinates_match = re.search(corner_coordinates_pattern, info)
+            
+            origin = origin_match.group(1) if origin_match else "Not found"
+            pixel_size = pixel_size_match.group(1) if pixel_size_match else "Not found"
+            corner_coordinates = corner_coordinates_match.group(1).strip() if corner_coordinates_match else "Not found"
+
+            # Concatenating the parsed information
+            parsed_info = f"Origin: {origin}\n\n\n\nPixel Size: {pixel_size}\n\n\n\nCorner Coordinates:\n{corner_coordinates}"
+
+            # Displaying the parsed information in one message box
+            QMessageBox.information(self, "GDAL Parsed Info", parsed_info)
+            
         except RuntimeError as e:
             QMessageBox.critical(self, "Error", str(e))      
 
