@@ -413,6 +413,7 @@ class AppGUI(QWidget):
             self.run_gnomonic_warp_checkbox.setChecked(False)
 
     def add_file(self):
+        # Change file path after testing
         script_dir = os.path.dirname(os.path.realpath(__file__)) + "/input/Moon/Local/SouthPole/"
         file_name, _ = QFileDialog.getOpenFileName(self, "Open File", script_dir)
         if file_name:
