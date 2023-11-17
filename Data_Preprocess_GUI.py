@@ -431,16 +431,32 @@ class AppGUI(QWidget):
         prjFileRoot = self.planet_data[planet_choice]['proj']
         prjFileSide = self.prjFileSide_combo.currentText()
         progBar = self.progBar
+
+        
+
         meters_per_pixel = self.mpp_input.value()
         # forceFullSideExtents = self.forceFullSideExtents_chk.isChecked()
         if self.prjFileSide_combo == "Global":
             Gnomonic_Warp_Global(inputFiles,radius,prjFileRoot,progBar,
-            meters_per_pixel)#,input_nodata_val=None#,nodata_val=0)
+            meters_per_pixel) #,input_nodata_val=None#,nodata_val=0)
+
+            if progBar.value() == 100:
+                # Create and display the popup
+                popup = QMessageBox()
+                popup.setWindowTitle("Process Complete")
+                popup.setText("The data processing is complete.")
+                popup.exec_()
         else:
             Gnomonic_Warp(
                 inputFiles, radius, prjFileRoot, prjFileSide, progBar, 
                 meters_per_pixel=meters_per_pixel, forceFullSideExtents=False
             )
+            if progBar.value() == 100:
+                # Create and display the popup
+                popup = QMessageBox()
+                popup.setWindowTitle("Process Complete")
+                popup.setText("The data processing is complete.")
+                popup.exec_()
     
             
     def display_gdal_info(self):
