@@ -22,8 +22,12 @@ import os
 EXPECTED_REL_PATH_TO_ANCHOR = "Tools/."
 #pip install gdal>=2.2.2 --global-option=build_ext --global-option="-IC:/OSGeo4W64/include/" --global-option="-LC:/OSGeo4W64/lib/"
 # extra_commands = ["install gdal>=2.2.2 --global-option=build_ext --global-option=\"-IC:/OSGeo4W64/include/\" --global-option=\"-LC:/OSGeo4W64/lib/\""]
-# Do this instead for gdal: https://www.youtube.com/watch?v=8iCWUp7WaTk
-# https://www.lfd.uci.edu/~gohlke/pythonlibs/
+
+# Do this instead for gdal: 
+# .\Tools\sc_tools_env\for_windows\Scripts\python.exe -m pip install .\GDAL_Wheels\GDAL-3.8.2-cp311-cp311-win_amd64.whl
+# More details: https://www.youtube.com/watch?v=8iCWUp7WaTk
+# https://github.com/cgohlke/geospatial-wheels/releases/download/v2024.1.1/GDAL-3.8.2-cp311-cp311-win_amd64.whl
+# https://github.com/cgohlke/geospatial-wheels/releases (for newer releases)
 # For Example: .\Tools\sc_tools_env\for_windows\Scripts\python.exe -m pip install .\GDAL_Wheels\GDAL-3.4.3-cp311-cp311-win_amd64.whl
 sc.easy_AutoVenv(__file__, EXPECTED_REL_PATH_TO_ANCHOR)
 
