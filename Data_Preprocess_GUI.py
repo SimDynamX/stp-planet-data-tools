@@ -50,7 +50,7 @@ from shutil import copyfile
 from colorama import Fore, Back, Style
 # import progressbar as pb
 
-from PySide2.QtWidgets import (QApplication, QVBoxLayout, QWidget, QPushButton, 
+from PySide6.QtWidgets import (QApplication, QVBoxLayout, QWidget, QPushButton, 
                                QFileDialog, QListWidget, QDoubleSpinBox, QLineEdit, 
                                QCheckBox, QProgressBar, QLabel, QComboBox,QFileDialog, QMessageBox,
                                QMainWindow, QDockWidget, QTextEdit)
