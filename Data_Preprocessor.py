@@ -94,12 +94,6 @@ def progress_callback(complete, message, data):
 def Gnomonic_Warp(inputFiles: list, radius: float, prjFileRoot: str, \
     prjFileSide: str, progBar: pb.ProgressBar, meters_per_pixel = 0.0, \
     forceFullSideExtents = False, input_nodata_val = None, nodata_val = 0, warpoptions = None):
-    print("-------------------")
-    print("-- Gnomonic_Warp --")
-    print("\t inputFile:",inputFiles)
-    print("\t radius:",radius)
-    prjFile = prjFileRoot + "_" + prjFileSide + ".prj"
-    print("\t prjFile:",prjFile)
     
     inpath = []
 
@@ -116,6 +110,13 @@ def Gnomonic_Warp(inputFiles: list, radius: float, prjFileRoot: str, \
     elif(not path.exists(path.split(outpath)[0])):
         print("Making new output directory \"" + path.split(outpath)[0] +"\"")
         os.makedirs(path.split(outpath)[0])
+
+    print("-------------------")
+    print("-- Gnomonic_Warp --")
+    print("\t inputFile:",inputFiles)
+    print("\t radius:",radius)
+    prjFile = prjFileRoot + "_" + prjFileSide + ".prj"
+    print("\t prjFile:",prjFile)
     
     radius_plus = radius * 33.0/32.0
 
@@ -310,6 +311,7 @@ if __name__ == "__main__":
     to 
     `PROJCRS["Ceres_Gnomonic_Eq90",BASEGEOGCRS["Ceres 2000",DATUM["D_Ceres_2000",ELLIPSOID["Ceres_2000_IAU_IAG",487300,0,LENGTHUNIT["metre",1,ID["EPSG",9001]]]],PRIMEM["Greenwich",0,ANGLEUNIT["Decimal_Degree",0.0174532925199433]]],CONVERSION["unnamed",METHOD["Gnomonic"],PARAMETER["Latitude of natural origin",0,ANGLEUNIT["Decimal_Degree",0.0174532925199433],ID["EPSG",8801]],PARAMETER["Longitude of natural origin",90,ANGLEUNIT["Decimal_Degree",0.0174532925199433],ID["EPSG",8802]],PARAMETER["False easting",0,LENGTHUNIT["metre",1],ID["EPSG",8806]],PARAMETER["False northing",0,LENGTHUNIT["metre",1],ID["EPSG",8807]]],CS[Cartesian,2],AXIS["(E)",east,ORDER[1],LENGTHUNIT["metre",1,ID["EPSG",9001]]],AXIS["(N)",north,ORDER[2],LENGTHUNIT["metre",1,ID["EPSG",9001]]]]'
     '''
+
 
 
     # Mercury
