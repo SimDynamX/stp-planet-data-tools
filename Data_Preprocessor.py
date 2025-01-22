@@ -169,6 +169,60 @@ def Gnomonic_Warp_Global(inputFiles: list, radius: float, prjFileRoot: str, \
     Gnomonic_Warp(inputFiles, radius, prjFileRoot, "SPole", progBar, meters_per_pixel, True, input_nodata_val, nodata_val)
 
 
+
+def convert_raster_16_8(input_file, output_file, scale_factor, src_nodata, dst_nodata):
+    # Open the input raster dataset
+    src_ds = gdal.Open(input_file, gdal.GA_ReadOnly)
+    if src_ds is None:
+        raise FileNotFoundError(f"Could not open input file: {input_file}")
+
+    # Get the source band
+    src_band = src_ds.GetRasterBand(1)  # Assuming it's a single-band raster
+    src_band.SetNoDataValue(src_nodata)
+    
+    src_data = src_band.ReadAsArray()
+    src_data[src_data == src_nodata] = 0  # Temporarily replace nodata for scaling
+
+    # Apply scale factor and clamp the data to uint8 range
+    scaled_data = src_data.astype(float) * scale_factor
+    clamped_data = np.clip(scaled_data, 0, 255).astype(np.uint8)
+
+    # Replace 0 with dst_nodata after scaling
+    scaled_data[scaled_data == 0] = dst_nodata
+
+    # Create the output raster dataset
+    driver = gdal.GetDriverByName('GTiff')
+    dst_ds = driver.Create(
+        output_file,
+        src_ds.RasterXSize,
+        src_ds.RasterYSize,
+        1,  # Number of bands
+        gdal.GDT_Byte  # uint8 type
+    )
+
+    if dst_ds is None:
+        raise RuntimeError(f"Could not create output file: {output_file}")
+
+    # Set the geotransform and projection from the source dataset
+    dst_ds.SetGeoTransform(src_ds.GetGeoTransform())
+    dst_ds.SetProjection(src_ds.GetProjection())
+
+    # Write the processed data to the output band
+    dst_band = dst_ds.GetRasterBand(1)
+    dst_band.WriteArray(clamped_data)
+    dst_band.SetNoDataValue(dst_nodata)
+
+    # Flush and close datasets
+    dst_band.FlushCache()
+    dst_ds.FlushCache()
+    dst_ds = None
+    src_ds = None
+
+    print(f"Conversion complete. Output saved to: {output_file}")
+
+
+
+
 #######################################
 ### MAIN ##############################
 
@@ -655,3 +709,51 @@ if __name__ == "__main__":
     if False:
         Gnomonic_Warp([path.join("Earth","Local","Caucasus", "dem_200_000.tif")], \
             6.378137e6, "earth_gnom", "NPole", pbar, meters_per_pixel=50, nodata_val=float_nodata)
+        
+    if True:
+        Gnomonic_Warp([path.join("Earth","Local","Texas", "BigBend", "N29W104.hgt")], \
+            6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30, nodata_val=int16_nodata)
+
+        # https://lpdaac.usgs.gov/products/hlsl30v002/ band info
+        # 4-red, 3-green, 2-blue
+
+        # convert from 16-bit to 8-bit
+        # #Set Translate options to change the data type to uint8
+        # options = gdal.TranslateOptions(outputType=gdal.GDT_Byte)
+
+        # # Perform the translation
+        # gdal.Translate(destName=path.join(outputDir, "Earth","Local","Texas", "BigBend", "HLS.L30.T13RFN.2024255T172121_R8.tif"), 
+        #                srcDS=gdal.Open(path.join(inputDir, "Earth","Local","Texas", "BigBend", "HLS.L30.T13RFN.2024255T172121.v2.0.B04.tif"), gdal.GA_ReadOnly), options=options)
+        # gdal.Translate(destName=path.join(outputDir, "Earth","Local","Texas", "BigBend", "HLS.L30.T13RFN.2024255T172121_G8.tif"), 
+        #                srcDS=gdal.Open(path.join(inputDir, "Earth","Local","Texas", "BigBend", "HLS.L30.T13RFN.2024255T172121.v2.0.B03.tif"), gdal.GA_ReadOnly), options=options)
+        # gdal.Translate(destName=path.join(outputDir, "Earth","Local","Texas", "BigBend", "HLS.L30.T13RFN.2024255T172121_B8.tif"), 
+        #                srcDS=gdal.Open(path.join(inputDir, "Earth","Local","Texas", "BigBend", "HLS.L30.T13RFN.2024255T172121.v2.0.B02.tif"), gdal.GA_ReadOnly), options=options)
+        
+        # convert from 16-bit to 8-bit and scale
+        # scale = 0.0001
+        scale = 0.05
+        input_raster = path.join(inputDir, "Earth","Local","Texas", "BigBend", "HLS.L30.T13RFN.2024255T172121.v2.0.B04.tif")
+        output_raster = path.join(inputDir, "Earth","Local","Texas", "BigBend", "HLS.L30.T13RFN.2024255T172121_R8.tif")
+        convert_raster_16_8(input_raster, output_raster, scale, -9999, 0)
+        input_raster = path.join(inputDir, "Earth","Local","Texas", "BigBend", "HLS.L30.T13RFN.2024255T172121.v2.0.B03.tif")
+        output_raster = path.join(inputDir, "Earth","Local","Texas", "BigBend", "HLS.L30.T13RFN.2024255T172121_G8.tif")
+        convert_raster_16_8(input_raster, output_raster, scale, -9999, 0)
+        input_raster = path.join(inputDir, "Earth","Local","Texas", "BigBend", "HLS.L30.T13RFN.2024255T172121.v2.0.B02.tif")
+        output_raster = path.join(inputDir, "Earth","Local","Texas", "BigBend", "HLS.L30.T13RFN.2024255T172121_B8.tif")
+        convert_raster_16_8(input_raster, output_raster, scale, -9999, 0)
+
+        Gnomonic_Warp([path.join("Earth","Local","Texas", "BigBend", "HLS.L30.T13RFN.2024255T172121_R8.tif")], \
+            6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30)
+        Gnomonic_Warp([path.join("Earth","Local","Texas", "BigBend", "HLS.L30.T13RFN.2024255T172121_G8.tif")], \
+            6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30)
+        Gnomonic_Warp([path.join("Earth","Local","Texas", "BigBend", "HLS.L30.T13RFN.2024255T172121_B8.tif")], \
+            6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30)
+
+        # Unmodified 16-bit
+        # Gnomonic_Warp([path.join("Earth","Local","Texas", "BigBend", "HLS.L30.T13RFN.2024255T172121.v2.0.B04.tif")], \
+        #     6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30, nodata_val=int16_nodata)
+        # Gnomonic_Warp([path.join("Earth","Local","Texas", "BigBend", "HLS.L30.T13RFN.2024255T172121.v2.0.B03.tif")], \
+        #     6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30, nodata_val=int16_nodata)
+        # Gnomonic_Warp([path.join("Earth","Local","Texas", "BigBend", "HLS.L30.T13RFN.2024255T172121.v2.0.B02.tif")], \
+        #     6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30, nodata_val=int16_nodata)
+        
