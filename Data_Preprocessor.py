@@ -756,4 +756,9 @@ if __name__ == "__main__":
         #     6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30, nodata_val=int16_nodata)
         # Gnomonic_Warp([path.join("Earth","Local","Texas", "BigBend", "HLS.L30.T13RFN.2024255T172121.v2.0.B02.tif")], \
         #     6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30, nodata_val=int16_nodata)
+
+
+        # https://data.tnris.org/
+        Gnomonic_Warp([path.join("Earth","Local","Texas", "BigBend", "ChisosMountains_2m.tif")], \
+            6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=2, input_nodata_val=-1e6, nodata_val=float_nodata)
         
