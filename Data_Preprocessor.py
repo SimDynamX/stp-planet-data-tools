@@ -93,7 +93,7 @@ def progress_callback(complete, message, data):
 
 def Gnomonic_Warp(inputFiles: list, radius: float, prjFileRoot: str, \
     prjFileSide: str, progBar: pb.ProgressBar, meters_per_pixel = 0.0, \
-    forceFullSideExtents = False, input_nodata_val = None, nodata_val = 0, warpoptions = None):
+    forceFullSideExtents = False, input_nodata_val = None, nodata_val : int|float = 0, warpoptions = None):
     
     inpath = []
 
