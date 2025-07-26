@@ -376,45 +376,20 @@ if __name__ == "__main__":
 
     # Ceres
     Gnomonic_Warp_Global([path.join("Ceres","Global","Ceres_Dawn_FC_HAMO_DTM_DLR_Global_60ppd_Oct2016.tif")], \
-        487300.0, "ceres_gnom", pbar, meters_per_pixel=142)
-    #TODO 
-    '''
-    ERROR 1: PROJ: proj_create_operations: Source and target ellipsoid do not belong to the same celestial body
-    ERROR 6: Cannot find coordinate operations from 
-    `PROJCRS["Equirectangular CERES",BASEGEOGCRS["GCS_CERES",DATUM["D_CERES",ELLIPSOID["CERES_localRadius",470000,0,LENGTHUNIT["metre",1,ID["EPSG",9001]]]],PRIMEM["Reference_Meridian",0,ANGLEUNIT["degree",0.0174532925199433,ID["EPSG",9122]]]],CONVERSION["Equidistant Cylindrical",METHOD["Equidistant Cylindrical",ID["EPSG",1028]],PARAMETER["Latitude of 1st standard parallel",0,ANGLEUNIT["degree",0.0174532925199433],ID["EPSG",8823]],PARAMETER["Longitude of natural origin",180,ANGLEUNIT["degree",0.0174532925199433],ID["EPSG",8802]],PARAMETER["False easting",0,LENGTHUNIT["metre",1],ID["EPSG",8806]],PARAMETER["False northing",0,LENGTHUNIT["metre",1],ID["EPSG",8807]]],CS[Cartesian,2],AXIS["easting",east,ORDER[1],LENGTHUNIT["metre",1,ID["EPSG",9001]]],AXIS["northing",north,ORDER[2],LENGTHUNIT["metre",1,ID["EPSG",9001]]]]' 
-    to 
-    `PROJCRS["Ceres_Gnomonic_Eq90",BASEGEOGCRS["Ceres 2000",DATUM["D_Ceres_2000",ELLIPSOID["Ceres_2000_IAU_IAG",487300,0,LENGTHUNIT["metre",1,ID["EPSG",9001]]]],PRIMEM["Greenwich",0,ANGLEUNIT["Decimal_Degree",0.0174532925199433]]],CONVERSION["unnamed",METHOD["Gnomonic"],PARAMETER["Latitude of natural origin",0,ANGLEUNIT["Decimal_Degree",0.0174532925199433],ID["EPSG",8801]],PARAMETER["Longitude of natural origin",90,ANGLEUNIT["Decimal_Degree",0.0174532925199433],ID["EPSG",8802]],PARAMETER["False easting",0,LENGTHUNIT["metre",1],ID["EPSG",8806]],PARAMETER["False northing",0,LENGTHUNIT["metre",1],ID["EPSG",8807]]],CS[Cartesian,2],AXIS["(E)",east,ORDER[1],LENGTHUNIT["metre",1,ID["EPSG",9001]]],AXIS["(N)",north,ORDER[2],LENGTHUNIT["metre",1,ID["EPSG",9001]]]]'
-    '''
-
+        470000.0, "ceres_gnom", pbar, meters_per_pixel=142)
 
 
     # Mercury
     Gnomonic_Warp_Global([path.join("Mercury","Global","Mercury_Messenger_USGS_DEM_Global_665m_v2.tif")], \
-        2493700, "mercury_gnom", pbar, meters_per_pixel=665)
+        2439400, "mercury_gnom", pbar, meters_per_pixel=665)
     Gnomonic_Warp_Global([path.join("Mercury","Global","Mercury_MESSENGER_MDIS_Basemap_LOI_Mosaic_Global_166m.tif")], \
-        2493700, "mercury_gnom", pbar, meters_per_pixel=166)
-    #TODO 
-    '''
-    ERROR 1: PROJ: proj_create_operations: Source and target ellipsoid do not belong to the same celestial body
-    ERROR 6: Cannot find coordinate operations from 
-    `PROJCRS["Equirectangular Mercury",BASEGEOGCRS["GCS_Mercury",DATUM["D_Mercury",ELLIPSOID["Mercury_localRadius",2439400,0,LENGTHUNIT["metre",1,ID["EPSG",9001]]]],PRIMEM["Reference_Meridian",0,ANGLEUNIT["degree",0.0174532925199433,ID["EPSG",9122]]]],CONVERSION["Equidistant Cylindrical",METHOD["Equidistant Cylindrical",ID["EPSG",1028]],PARAMETER["Latitude of 1st standard parallel",0,ANGLEUNIT["degree",0.0174532925199433],ID["EPSG",8823]],PARAMETER["Longitude of natural origin",180,ANGLEUNIT["degree",0.0174532925199433],ID["EPSG",8802]],PARAMETER["False easting",0,LENGTHUNIT["metre",1],ID["EPSG",8806]],PARAMETER["False northing",0,LENGTHUNIT["metre",1],ID["EPSG",8807]]],CS[Cartesian,2],AXIS["easting",east,ORDER[1],LENGTHUNIT["metre",1,ID["EPSG",9001]]],AXIS["northing",north,ORDER[2],LENGTHUNIT["metre",1,ID["EPSG",9001]]]]' 
-    to 
-    `PROJCRS["Mercury_Gnomonic_Eq90",BASEGEOGCRS["Mercury 2000",DATUM["D_Mercury_2000",ELLIPSOID["Mercury_2000_IAU_IAG",2493700,0,LENGTHUNIT["metre",1,ID["EPSG",9001]]]],PRIMEM["Greenwich",0,ANGLEUNIT["Decimal_Degree",0.0174532925199433]]],CONVERSION["unnamed",METHOD["Gnomonic"],PARAMETER["Latitude of natural origin",0,ANGLEUNIT["Decimal_Degree",0.0174532925199433],ID["EPSG",8801]],PARAMETER["Longitude of natural origin",90,ANGLEUNIT["Decimal_Degree",0.0174532925199433],ID["EPSG",8802]],PARAMETER["False easting",0,LENGTHUNIT["metre",1],ID["EPSG",8806]],PARAMETER["False northing",0,LENGTHUNIT["metre",1],ID["EPSG",8807]]],CS[Cartesian,2],AXIS["(E)",east,ORDER[1],LENGTHUNIT["metre",1,ID["EPSG",9001]]],AXIS["(N)",north,ORDER[2],LENGTHUNIT["metre",1,ID["EPSG",9001]]]]'
-    '''
+        2439400, "mercury_gnom", pbar, meters_per_pixel=166)
 
     # Phobos
     Gnomonic_Warp_Global([path.join("Mars", "Phobos","Global","Phobos_Viking_Mosaic_40ppd_DLRcontrol.tif")], \
-        13000, "phobos_gnom", pbar, meters_per_pixel= 5.67)
+        11100, "phobos_gnom", pbar, meters_per_pixel= 5.67)
     Gnomonic_Warp_Global([path.join("Mars", "Phobos","Global","Phobos_ME_HRSC_DEM_Global_2ppd.tif")], \
-        13000, "phobos_gnom", pbar, meters_per_pixel=113)
-    #TODO
-    '''
-    ERROR 1: PROJ: proj_create_operations: Source and target ellipsoid do not belong to the same celestial body
-    ERROR 6: Cannot find coordinate operations from 
-    `PROJCRS["SimpleCylindrical Phobos",BASEGEOGCRS["GCS_Phobos",DATUM["D_Phobos",ELLIPSOID["Phobos",11100,0,LENGTHUNIT["metre",1,ID["EPSG",9001]]]],PRIMEM["Reference_Meridian",0,ANGLEUNIT["degree",0.0174532925199433,ID["EPSG",9122]]]],CONVERSION["Equidistant Cylindrical",METHOD["Equidistant Cylindrical",ID["EPSG",1028]],PARAMETER["Latitude of 1st standard parallel",0,ANGLEUNIT["degree",0.0174532925199433],ID["EPSG",8823]],PARAMETER["Longitude of natural origin",0,ANGLEUNIT["degree",0.0174532925199433],ID["EPSG",8802]],PARAMETER["False easting",0,LENGTHUNIT["metre",1],ID["EPSG",8806]],PARAMETER["False northing",0,LENGTHUNIT["metre",1],ID["EPSG",8807]]],CS[Cartesian,2],AXIS["easting",east,ORDER[1],LENGTHUNIT["metre",1,ID["EPSG",9001]]],AXIS["northing",north,ORDER[2],LENGTHUNIT["metre",1,ID["EPSG",9001]]]]' 
-    to 
-    `PROJCRS["Phobos_Gnomonic_Eq90",BASEGEOGCRS["Phobos 2000",DATUM["D_Phobos_2000",ELLIPSOID["Phobos_2000_IAU_IAG",13000,0,LENGTHUNIT["metre",1,ID["EPSG",9001]]]],PRIMEM["Greenwich",0,ANGLEUNIT["Decimal_Degree",0.0174532925199433]]],CONVERSION["unnamed",METHOD["Gnomonic"],PARAMETER["Latitude of natural origin",0,ANGLEUNIT["Decimal_Degree",0.0174532925199433],ID["EPSG",8801]],PARAMETER["Longitude of natural origin",90,ANGLEUNIT["Decimal_Degree",0.0174532925199433],ID["EPSG",8802]],PARAMETER["False easting",0,LENGTHUNIT["metre",1],ID["EPSG",8806]],PARAMETER["False northing",0,LENGTHUNIT["metre",1],ID["EPSG",8807]]],CS[Cartesian,2],AXIS["(E)",east,ORDER[1],LENGTHUNIT["metre",1,ID["EPSG",9001]]],AXIS["(N)",north,ORDER[2],LENGTHUNIT["metre",1,ID["EPSG",9001]]]]'
-    '''
+        11100, "phobos_gnom", pbar, meters_per_pixel=113)
 
     # Vesta
     Gnomonic_Warp_Global([path.join("Vesta","Global","Vesta_Dawn_HAMO_DTM_DLR_Global_48ppd.tif")], \
