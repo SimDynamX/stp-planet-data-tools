@@ -254,6 +254,20 @@ if __name__ == "__main__":
         1737400.0, "moon_gnom", pbar, meters_per_pixel=118 * large_datasets_mpp_mult)
     Gnomonic_Warp_Global([path.join("Moon","Global","Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif")], \
         1737400.0, "moon_gnom", pbar, meters_per_pixel=100 * large_datasets_mpp_mult)
+    # https://data.lroc.im-ldi.com/lroc/view_rdr/WAC_HAPKE
+    
+    Gnomonic_Warp_Global([path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N0450.tiff"), \
+        path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N1350.tiff"),  \
+        path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N2250.tiff"),  \
+        path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N3150.tiff"),  \
+        path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S0450.tiff"),  \
+        path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S2250.tiff"),  \
+        path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S3150.tiff"),  \
+        path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S1350.tiff")],  \
+        1737400.0, "moon_gnom", pbar, meters_per_pixel=400)
+
+    # Also may want to look at https://data.lroc.im-ldi.com/lroc/view_rdr/WAC_EMP
+
     # Moon Apollo Sites
     Gnomonic_Warp([path.join("Moon","Local","Apollo17","APOLLO17_DTM_150CM.TIFF")], \
         1737400.0, "moon_gnom", "Eq_0", pbar, meters_per_pixel=1.5, nodata_val=float_nodata)
