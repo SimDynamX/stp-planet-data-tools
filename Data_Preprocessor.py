@@ -251,9 +251,9 @@ if __name__ == "__main__":
 
     # Moon Global
     Gnomonic_Warp_Global([path.join("Moon","Global","Lunar_LRO_LOLA_Global_LDEM_118m_Mar2014.tif")], \
-        1737400.0, "moon_gnom", pbar, meters_per_pixel=118 * large_datasets_mpp_mult)
+        1737400.0, "moon_gnom", pbar, meters_per_pixel=118)
     Gnomonic_Warp_Global([path.join("Moon","Global","Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif")], \
-        1737400.0, "moon_gnom", pbar, meters_per_pixel=100 * large_datasets_mpp_mult)
+        1737400.0, "moon_gnom", pbar, meters_per_pixel=100 * DOWNSAMPLE_4X) # 4x downsampled because we're planning to phase out use anyway due to heavy shadows.
     # https://data.lroc.im-ldi.com/lroc/view_rdr/WAC_HAPKE
     
     Gnomonic_Warp_Global([path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N0450.tiff"), \
@@ -274,10 +274,10 @@ if __name__ == "__main__":
     Gnomonic_Warp([path.join("Moon","Local","Apollo17","APOLLO17_ORTHOMOSAIC_50CM.TIFF")], \
         1737400.0, "moon_gnom", "Eq_0", pbar, meters_per_pixel=0.5)
     Gnomonic_Warp([path.join("Moon","Local","Apollo15","LRO_NAC_DEM_Apollo_15_26N004E_150cmp.tif")], \
-        1737400.0, "moon_gnom", "Eq_0", pbar, meters_per_pixel=1.5 * 2, nodata_val=float_nodata)
+        1737400.0, "moon_gnom", "Eq_0", pbar, meters_per_pixel=1.5 * DOWNSAMPLE_2X, nodata_val=float_nodata)
     #     #TODO this ^ needs its nodata value set to our standardized value
     Gnomonic_Warp([path.join("Moon","Local","Apollo15","Moon_LRO_NAC_Mosaic_26N004E_50cmp.tif")], \
-        1737400.0, "moon_gnom", "Eq_0", pbar, meters_per_pixel=0.5 * 4) 
+        1737400.0, "moon_gnom", "Eq_0", pbar, meters_per_pixel=0.5 * DOWNSAMPLE_4X) 
         #TODO this ^ is giving an error partway through:
         # ERROR 1: LZWDecode:Not enough data at scanline 47450 (short 53477 bytes)
         # ERROR 1: TIFFReadEncodedStrip() failed.
@@ -303,11 +303,11 @@ if __name__ == "__main__":
 
     # Mars
     Gnomonic_Warp_Global([path.join("Mars","Global","Mars_HRSC_MOLA_BlendDEM_Global_200mp_v2.tif")], \
-        3396190.0, "mars_gnom", pbar, meters_per_pixel=200 * large_datasets_mpp_mult)
+        3396190.0, "mars_gnom", pbar, meters_per_pixel=200)
     # This one is "artisticly" colored, which doesn't look good in 3D and is not accurate.
     # Disabled for now.
     #Gnomonic_Warp_Global(path.join("Mars","Global","Mars_Viking_MDIM21_ClrMosaic_global_232m.tif"), \
-    #    3396190.0, "mars_gnom", pbar, meters_per_pixel=232 * large_datasets_mpp_mult)
+    #    3396190.0, "mars_gnom", pbar, meters_per_pixel=232)
     # This one is at least close to color-accurate.
     Gnomonic_Warp_Global([path.join("Mars","Global","Mars_Viking_ClrMosaic_global_925m.tif")], \
         3396190.0, "mars_gnom", pbar, meters_per_pixel=925)
@@ -322,7 +322,7 @@ if __name__ == "__main__":
     Gnomonic_Warp([path.join("Mars","Local","Jezero","J03_045994_1986_XN_18N282W_6m_ORTHO.tif")], \
         3396190.0, "mars_gnom", "Eq_90", pbar, meters_per_pixel=6)
     Gnomonic_Warp([path.join("Mars","Local","Jezero","JEZ_hirise_soc_006_orthoMosaic_25cm_Eqc_latTs0_lon0_first.tif")], \
-        3396190.0, "mars_gnom", "Eq_90", pbar, meters_per_pixel=0.25 * large_datasets_mpp_mult)
+        3396190.0, "mars_gnom", "Eq_90", pbar, meters_per_pixel=0.25 * DOWNSAMPLE_4X)
     Gnomonic_Warp([path.join("Mars","Local","Jezero","DTEEC_045994_1985_046060_1985_U01.IMG")], \
         3396190.0, "mars_gnom", "Eq_90", pbar, meters_per_pixel=1, nodata_val=float_nodata)
     # Gale
