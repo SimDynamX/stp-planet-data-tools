@@ -247,6 +247,8 @@ if __name__ == "__main__":
 
     pbar = pb.ProgressBar()
 
+    # LROC dataset info: https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DOCUMENT/RDRSIS.PDF
+
     # Moon Global
     Gnomonic_Warp_Global([path.join("Moon","Global","Lunar_LRO_LOLA_Global_LDEM_118m_Mar2014.tif")], \
         1737400.0, "moon_gnom", pbar, meters_per_pixel=118 * large_datasets_mpp_mult)
@@ -295,6 +297,10 @@ if __name__ == "__main__":
     # This one is at least close to color-accurate.
     Gnomonic_Warp_Global([path.join("Mars","Global","Mars_Viking_ClrMosaic_global_925m.tif")], \
         3396190.0, "mars_gnom", pbar, meters_per_pixel=925)
+    
+    # Global color mosaic 76 meters per pixel 
+    # - https://www.sciencedirect.com/science/article/pii/S2095927324002949?via%3Dihub
+    # - https://clpds.bao.ac.cn/web/enmanager/kxsj?missionName=HX1&zhName=MoRIC&grade=DOM-Global-76.0#none
     
     # Jezero
     Gnomonic_Warp([path.join("Mars","Local","Jezero","J03_045994_1986_J03_046060_1986_20m_DTM.tif")], \
@@ -556,6 +562,9 @@ if __name__ == "__main__":
     # Georeference Blue Marble vis color PNGs then get gnomonic warps of them
     #TODO clouds
 
+
+    # Possibly higher fidelity than Blue Marble Next Generation: https://github.com/lyrk/true-marble-edit?tab=readme-ov-file
+
     #https://gis.stackexchange.com/a/334024/144120
     print("Wait for georeferencing of blue marble datasets...")
     print("A1")
@@ -638,7 +647,6 @@ if __name__ == "__main__":
                     format="GTiff",
                     creationOptions = ['COMPRESS=LZW'])
             )    
-
 
     Gnomonic_Warp_Global([path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.A1.tif"), \
         path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.B1.tif"),  \
