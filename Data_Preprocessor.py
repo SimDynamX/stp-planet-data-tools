@@ -256,15 +256,199 @@ if __name__ == "__main__":
         1737400.0, "moon_gnom", pbar, meters_per_pixel=100 * DOWNSAMPLE_4X) # 4x downsampled because we're planning to phase out use anyway due to heavy shadows.
     # https://data.lroc.im-ldi.com/lroc/view_rdr/WAC_HAPKE
     
-    Gnomonic_Warp_Global([path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N0450.tiff"), \
-        path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N1350.tiff"),  \
-        path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N2250.tiff"),  \
-        path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N3150.tiff"),  \
-        path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S0450.tiff"),  \
-        path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S2250.tiff"),  \
-        path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S3150.tiff"),  \
-        path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S1350.tiff")],  \
+    # Gnomonic_Warp_Global([path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N0450.tiff"), \
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N1350.tiff"),  \
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N2250.tiff"),  \
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N3150.tiff"),  \
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S0450.tiff"),  \
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S2250.tiff"),  \
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S3150.tiff"),  \
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S1350.tiff")],  \
+    #     1737400.0, "moon_gnom", pbar, meters_per_pixel=400)
+    
+    Gnomonic_Warp_Global([path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_Merged.tiff")],
         1737400.0, "moon_gnom", pbar, meters_per_pixel=400)
+
+    exit(0)
+
+    # # Labeled where the middle longitude is. span is +/- 45 degrees.
+    # input_files = [
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N0450.tiff"),  # 45 E  (right of prime meridian)
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N1350.tiff"),  # 135 E
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N2250.tiff"),  # 225 E
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N3150.tiff"),  # 315 E (left of prime meridian)
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S0450.tiff"),  # 45 E  (right of prime meridian)
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S1350.tiff"),  # 135 E
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S2250.tiff"),  # 225 E
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S3150.tiff")   # 315 E (left of prime meridian)
+    #     ]  
+
+    
+    # inpath_ = []
+
+    # for inputFile in input_files:
+    #     inpath_.append(path.join(inputDir,inputFile))
+
+    # warpoptions_ = gdal.WarpOptions( 
+    #             resampleAlg="bilinear", 
+    #             dstSRS=path.join(projDir,"moon_cyl.prj"),
+    #             outputBounds=[-180, -70, 180, 70], # whole moon up to +- 70 degrees latitude
+    #             outputBoundsSRS=path.join(projDir,"moon_cyl.prj"),
+    #             # xRes=400,
+    #             # yRes=400,
+    #             width=5321*4,
+    #             height=6840*2+1,
+    #             # targetAlignedPixels=True,
+    #             srcNodata=0,
+    #             dstNodata=0,
+    #             format="GTiff",
+    #             creationOptions = ['COMPRESS=LZW'],
+    #             multithread=True,
+    #             callback=progress_callback,
+    #             callback_data=pbar 
+    #             )
+    
+    # pbar.start()
+    # gdal.Warp(path.join(inputDir,"Moon","Global","RGB","WAC_HAPKE_3BAND_Merged.tiff"), inpath_, options=warpoptions_)
+    # pbar.finish()
+
+    # exit(0)
+
+    # # TEST TO SEE IF THIS VANISHING DATA IS JUST BAD
+    # Gnomonic_Warp([path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N3150.tiff")], \
+    #     1737400, "moon_gnom", "Eq_0", pbar, meters_per_pixel=400, nodata_val=0)
+
+
+
+    # input_files = [
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N3150.tiff"),  # 315 E (left of prime meridian)
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N0450.tiff"),  # 45 E  (right of prime meridian)
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S3150.tiff"),  # 315 E (left of prime meridian)
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S0450.tiff")   # 45 E  (right of prime meridian)
+    #     ]  
+    # rad_plus = 1737400.0 * 33.0/32.0  # 1% larger than the radius, to ensure full coverage
+    # warpoptions_ = gdal.WarpOptions( 
+    #             resampleAlg="bilinear", 
+    #             dstSRS=path.join(projDir,"moon_gnom_Eq_0.prj"),
+    #             outputBounds=[-rad_plus, -rad_plus, rad_plus, rad_plus],
+    #             xRes=400,
+    #             yRes=400,
+    #             srcNodata=0,
+    #             dstNodata=0,
+    #             format="GTiff",
+    #             creationOptions = ['COMPRESS=LZW'],
+    #             multithread=True,
+    #             callback=progress_callback,
+    #             callback_data=pbar 
+    #             )
+    # Gnomonic_Warp(input_files, 1737400.0, "moon_gnom", "Eq_0", pbar, meters_per_pixel=400, forceFullSideExtents=True, nodata_val=0, warpoptions=warpoptions_)
+    # input_files = [
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N0450.tiff"),  # 45 E  (right of prime meridian)
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N1350.tiff"),  # 135 E
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S0450.tiff"),  # 45 E  (right of prime meridian)
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S1350.tiff"),  # 135 E
+    #     ]  
+    # warpoptions_ = gdal.WarpOptions( 
+    #             resampleAlg="bilinear", 
+    #             dstSRS=path.join(projDir,"moon_gnom_Eq_90.prj"),
+    #             outputBounds=[-rad_plus, -rad_plus, rad_plus, rad_plus],
+    #             xRes=400,
+    #             yRes=400,
+    #             srcNodata=0,
+    #             dstNodata=0,
+    #             format="GTiff",
+    #             creationOptions = ['COMPRESS=LZW'],
+    #             multithread=True,
+    #             callback=progress_callback,
+    #             callback_data=pbar 
+    #             )
+    # Gnomonic_Warp(input_files, 1737400.0, "moon_gnom", "Eq_90", pbar, meters_per_pixel=400, forceFullSideExtents=True, nodata_val=0, warpoptions=warpoptions_)
+    # input_files = [
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N1350.tiff"),  # 135 E
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N2250.tiff"),  # 225 E
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S1350.tiff"),  # 135 E
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S2250.tiff"),  # 225 E
+    #     ]  
+    # warpoptions_ = gdal.WarpOptions( 
+    #             resampleAlg="bilinear", 
+    #             dstSRS=path.join(projDir,"moon_gnom_Eq_180.prj"),
+    #             outputBounds=[-rad_plus, -rad_plus, rad_plus, rad_plus],
+    #             xRes=400,
+    #             yRes=400,
+    #             srcNodata=0,
+    #             dstNodata=0,
+    #             format="GTiff",
+    #             creationOptions = ['COMPRESS=LZW'],
+    #             multithread=True,
+    #             callback=progress_callback,
+    #             callback_data=pbar 
+    #             )
+    # Gnomonic_Warp(input_files, 1737400.0, "moon_gnom", "Eq_180", pbar, meters_per_pixel=400, forceFullSideExtents=True, nodata_val=0, warpoptions=warpoptions_)
+    # input_files = [
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N2250.tiff"),  # 225 E
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N3150.tiff"),  # 315 E (left of prime meridian)
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S2250.tiff"),  # 225 E
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S3150.tiff")   # 315 E (left of prime meridian)
+    #     ]  
+    # warpoptions_ = gdal.WarpOptions( 
+    #             resampleAlg="bilinear", 
+    #             dstSRS=path.join(projDir,"moon_gnom_Eq_270.prj"),
+    #             outputBounds=[-rad_plus, -rad_plus, rad_plus, rad_plus],
+    #             xRes=400,
+    #             yRes=400,
+    #             srcNodata=0,
+    #             dstNodata=0,
+    #             format="GTiff",
+    #             creationOptions = ['COMPRESS=LZW'],
+    #             multithread=True,
+    #             callback=progress_callback,
+    #             callback_data=pbar 
+    #             )
+    # Gnomonic_Warp(input_files, 1737400.0, "moon_gnom", "Eq_270", pbar, meters_per_pixel=400, forceFullSideExtents=True, nodata_val=0, warpoptions=warpoptions_)
+    
+    # input_files = [
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N0450.tiff"),  # 45 E
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N1350.tiff"),  # 135 E
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N2250.tiff"),  # 225 E
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N3150.tiff")   # 315 E
+    #     ]  
+    # warpoptions_ = gdal.WarpOptions( 
+    #             resampleAlg="bilinear", 
+    #             dstSRS=path.join(projDir,"moon_gnom_NPole.prj"),
+    #             outputBounds=[-rad_plus, -rad_plus, rad_plus, rad_plus],
+    #             xRes=400,
+    #             yRes=400,
+    #             srcNodata=0,
+    #             dstNodata=0,
+    #             format="GTiff",
+    #             creationOptions = ['COMPRESS=LZW'],
+    #             multithread=True,
+    #             callback=progress_callback,
+    #             callback_data=pbar 
+    #             )
+    # Gnomonic_Warp(input_files, 1737400.0, "moon_gnom", "NPole", pbar, meters_per_pixel=400, forceFullSideExtents=True, nodata_val=0, warpoptions=warpoptions_)
+    
+    # input_files = [
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S0450.tiff"),  # 45 E
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S1350.tiff"),  # 135 E
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S2250.tiff"),  # 225 E
+    #     path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S3150.tiff")   # 315 E
+    #     ]  
+    # warpoptions_ = gdal.WarpOptions( 
+    #             resampleAlg="bilinear", 
+    #             dstSRS=path.join(projDir,"moon_gnom_SPole.prj"),
+    #             outputBounds=[-rad_plus, -rad_plus, rad_plus, rad_plus],
+    #             xRes=400,
+    #             yRes=400,
+    #             srcNodata=0,
+    #             dstNodata=0,
+    #             format="GTiff",
+    #             creationOptions = ['COMPRESS=LZW'],
+    #             multithread=True,
+    #             callback=progress_callback,
+    #             callback_data=pbar 
+    #             )
+    # Gnomonic_Warp(input_files, 1737400.0, "moon_gnom", "SPole", pbar, meters_per_pixel=400, forceFullSideExtents=True, nodata_val=0, warpoptions=warpoptions_)
 
     # Also may want to look at https://data.lroc.im-ldi.com/lroc/view_rdr/WAC_EMP
 
@@ -707,7 +891,7 @@ if __name__ == "__main__":
         Gnomonic_Warp([path.join("Earth","Local","Caucasus", "dem_200_000.tif")], \
             6.378137e6, "earth_gnom", "NPole", pbar, meters_per_pixel=50, nodata_val=float_nodata)
         
-    if True:
+    if False:
         Gnomonic_Warp([path.join("Earth","Local","Texas", "BigBend", "N29W104.hgt")], \
             6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30, nodata_val=int16_nodata)
 
@@ -754,7 +938,7 @@ if __name__ == "__main__":
         # Gnomonic_Warp([path.join("Earth","Local","Texas", "BigBend", "HLS.L30.T13RFN.2024255T172121.v2.0.B02.tif")], \
         #     6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30, nodata_val=int16_nodata)
 
-
+    if True:
         # https://data.tnris.org/
         Gnomonic_Warp([path.join("Earth","Local","Texas", "BigBend", "ChisosMountains_2m.tif")], \
             6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=2, input_nodata_val=-1e6, nodata_val=float_nodata)
