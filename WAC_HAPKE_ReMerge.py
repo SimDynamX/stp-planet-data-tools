@@ -141,9 +141,12 @@ for info in infos[1:]:
 # -----------------------------------------------------------------------------
 minx_all = min(info["minx"] for info in infos)
 maxx_all = max(info["maxx"] for info in infos)
-# override latitude extents to cover full sphere
-# maxy_all =  90.0
-# miny_all = -90.0
+
+# ─── Re‑center longitudes to [–½world … +½world] ───
+world_width = maxx_all - minx_all
+minx_all    = -0.5 * world_width
+maxx_all    =  0.5 * world_width
+
 miny_all = min(info["miny"] for info in infos)
 maxy_all = max(info["maxy"] for info in infos)
 
@@ -191,14 +194,33 @@ for b in range(1, band_count+1):
 # 4. Blit each input tile into its correct offset
 # -----------------------------------------------------------------------------
 north_pole_offset = (out_ysize_exp - out_ysize) // 2
+
+# for info in infos:
+#     # column offset
+#     xoff = int((info["minx"] - minx_all) / px0 + 0.5)
+
+half_world = world_width * 0.5
 for info in infos:
-    # column offset
-    xoff = int((info["minx"] - minx_all) / px0 + 0.5)
+    # wrap tiles that start > +½world back into negative side
+    orig_minx = info["minx"]
+    if orig_minx > half_world:
+        tile_minx = orig_minx - world_width
+    else:
+        tile_minx = orig_minx
+
+    # column offset relative to new minx_all
+    xoff = int((tile_minx - minx_all) / px0 + 0.5)
+
+    if(xoff >= out_xsize):
+        xoff -= out_xsize
+
+    # xoff = int(tile_minx / px0)
     # row offset from the new 90°N top
     yoff = north_pole_offset + int((maxy_all - info["maxy"]) / abs(py0) + 0.5)
 
     for b in range(1, band_count+1):
         arr = info["ds"].GetRasterBand(b).ReadAsArray()
+        print(f"Blitting {info['fn']} band {b} at xoff={xoff}, yoff={yoff}, arr.shape={arr.shape}")
         out_ds.GetRasterBand(b).WriteArray(arr, xoff, yoff)
 
     # close input

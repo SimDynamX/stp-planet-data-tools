@@ -48,6 +48,8 @@ import numpy as np
 
 from osgeo import gdal
 
+gdal.UseExceptions()
+
 from shutil import copyfile
 from colorama import Fore, Back, Style
 import progressbar as pb
