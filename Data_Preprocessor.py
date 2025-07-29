@@ -740,11 +740,11 @@ if __name__ == "__main__":
         convert_raster_16_8(input_raster, output_raster, scale, -9999, 0)
 
         Gnomonic_Warp([path.join("Earth","Local","Texas", "BigBend", "HLS.L30.T13RFN.2024255T172121_R8.tif")], \
-            6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30)
+            6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30, input_nodata_val=0, nodata_val=0)
         Gnomonic_Warp([path.join("Earth","Local","Texas", "BigBend", "HLS.L30.T13RFN.2024255T172121_G8.tif")], \
-            6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30)
+            6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30, input_nodata_val=0, nodata_val=0)
         Gnomonic_Warp([path.join("Earth","Local","Texas", "BigBend", "HLS.L30.T13RFN.2024255T172121_B8.tif")], \
-            6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30)
+            6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30, input_nodata_val=0, nodata_val=0)
 
         # Unmodified 16-bit
         # Gnomonic_Warp([path.join("Earth","Local","Texas", "BigBend", "HLS.L30.T13RFN.2024255T172121.v2.0.B04.tif")], \
