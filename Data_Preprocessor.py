@@ -45,8 +45,11 @@ import glob
 import zipfile
 import time
 import numpy as np
+import subprocess
 
 from osgeo import gdal
+
+gdal.UseExceptions()
 
 from shutil import copyfile
 from colorama import Fore, Back, Style
@@ -256,14 +259,12 @@ if __name__ == "__main__":
         1737400.0, "moon_gnom", pbar, meters_per_pixel=100 * DOWNSAMPLE_4X) # 4x downsampled because we're planning to phase out use anyway due to heavy shadows.
     # https://data.lroc.im-ldi.com/lroc/view_rdr/WAC_HAPKE
     
-    Gnomonic_Warp_Global([path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N0450.tiff"), \
-        path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N1350.tiff"),  \
-        path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N2250.tiff"),  \
-        path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350N3150.tiff"),  \
-        path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S0450.tiff"),  \
-        path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S2250.tiff"),  \
-        path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S3150.tiff"),  \
-        path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_E350S1350.tiff")],  \
+    # Need to have run the WAC_HAPKE_ReMerge.py script first to generate this file:
+
+    if(not path.exists(path.join(inputDir,"Moon","Global","RGB","WAC_HAPKE_3BAND_Merged.tiff"))):
+        subprocess.run(["python", "WAC_HAPKE_ReMerge.py"], check=True)
+
+    Gnomonic_Warp_Global([path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_Merged.tiff")],
         1737400.0, "moon_gnom", pbar, meters_per_pixel=400)
 
     # Also may want to look at https://data.lroc.im-ldi.com/lroc/view_rdr/WAC_EMP
@@ -707,7 +708,7 @@ if __name__ == "__main__":
         Gnomonic_Warp([path.join("Earth","Local","Caucasus", "dem_200_000.tif")], \
             6.378137e6, "earth_gnom", "NPole", pbar, meters_per_pixel=50, nodata_val=float_nodata)
         
-    if True:
+    if False:
         Gnomonic_Warp([path.join("Earth","Local","Texas", "BigBend", "N29W104.hgt")], \
             6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30, nodata_val=int16_nodata)
 
@@ -754,7 +755,7 @@ if __name__ == "__main__":
         # Gnomonic_Warp([path.join("Earth","Local","Texas", "BigBend", "HLS.L30.T13RFN.2024255T172121.v2.0.B02.tif")], \
         #     6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30, nodata_val=int16_nodata)
 
-
+    if True:
         # https://data.tnris.org/
         Gnomonic_Warp([path.join("Earth","Local","Texas", "BigBend", "ChisosMountains_2m.tif")], \
             6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=2, input_nodata_val=-1e6, nodata_val=float_nodata)
