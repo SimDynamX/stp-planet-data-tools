@@ -52,6 +52,7 @@ import json
 from osgeo import gdal, osr
 
 gdal.UseExceptions()
+# gdal.AllRegister()
 
 from shutil import copyfile
 from colorama import Fore, Back, Style
@@ -82,6 +83,13 @@ input_files = [
     path.join(inputDir, "Moon","Global","RGB","WAC_HAPKE_3BAND_E350S3150.tiff")   # 315 E (left of prime meridian)
     ]  
 output_file = path.join(inputDir, "Moon","Global","RGB","WAC_HAPKE_3BAND_Merged.tiff")
+
+
+# Read a known-good moon projection file:
+other_moon_ds : gdal.Dataset = gdal.Open(path.join(inputDir, "Moon","Global","Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif"), gdal.GA_ReadOnly)
+
+proj_knowngood = other_moon_ds.GetProjection()
+
 
 # -----------------------------------------------------------------------------
 # 1. Read input metadata
@@ -142,26 +150,36 @@ maxy_all = max(info["maxy"] for info in infos)
 # output raster dimensions
 out_xsize = int((maxx_all - minx_all) / px0 + 0.5)
 out_ysize = int((maxy_all - miny_all) / abs(py0) + 0.5)
+out_ysize_exp = int(math.floor(out_ysize * 90.0/70.0))-2 # Expand to cover poles
 print(f"maxx_all: {maxx_all}, minx_all: {minx_all}")
 print(f"maxy_all: {maxy_all}, miny_all: {miny_all}")
 print(f"px0: {px0}, py0: {py0}")
-print(f"Output raster size: {out_xsize} x {out_ysize} pixels")
+print(f"Data extents size: {out_xsize} x {out_ysize} pixels")
+print(f"Output raster size: {out_xsize} x {out_ysize_exp} pixels")
 
 # -----------------------------------------------------------------------------
 # 3. Create the output and initialize pole regions to zero/nodata
 # -----------------------------------------------------------------------------
-driver     = gdal.GetDriverByName("GTiff")
-band_count = infos[0]["ds"].RasterCount
-data_type  = infos[0]["ds"].GetRasterBand(1).DataType
+driver : gdal.Driver = gdal.GetDriverByName("GTiff")
+in_ds : gdal.Dataset = infos[0]["ds"] 
+band_count = in_ds.RasterCount
+data_type  = in_ds.GetRasterBand(1).DataType
 
-out_ds = driver.Create(output_file, out_xsize, out_ysize, band_count, data_type)
+out_ds : gdal.Dataset = driver.Create(output_file, out_xsize, out_ysize_exp, band_count, data_type)
 if out_ds is None:
     raise RuntimeError(f"Cannot create {output_file}")
 
 # assign geotransform & projection
-out_gt = (minx_all, px0, 0, maxy_all, 0, py0)
+geotrans_max_y = maxy_all + (out_ysize_exp - out_ysize) * abs(py0) / 2.0
+out_gt = (minx_all, px0, 0, geotrans_max_y, 0, py0)
 out_ds.SetGeoTransform(out_gt)
-out_ds.SetProjection(proj0)
+# out_ds.SetProjection(proj0) # use the same projection as the inputs
+
+# with open(path.join(projDir, "moon_cyl.prj"), "r") as prj_file:
+#     wkt_txt = prj_file.read()
+# out_ds.SetProjection(wkt_txt) #replace with our own projection file
+
+out_ds.SetProjection(proj_knowngood)  # use the known-good projection
 
 # set nodata=0 and fill entire raster with zeros (so poles remain zero)
 for b in range(1, band_count+1):
@@ -172,11 +190,12 @@ for b in range(1, band_count+1):
 # -----------------------------------------------------------------------------
 # 4. Blit each input tile into its correct offset
 # -----------------------------------------------------------------------------
+north_pole_offset = (out_ysize_exp - out_ysize) // 2
 for info in infos:
     # column offset
     xoff = int((info["minx"] - minx_all) / px0 + 0.5)
     # row offset from the new 90°N top
-    yoff = int((maxy_all - info["maxy"]) / abs(py0) + 0.5)
+    yoff = north_pole_offset + int((maxy_all - info["maxy"]) / abs(py0) + 0.5)
 
     for b in range(1, band_count+1):
         arr = info["ds"].GetRasterBand(b).ReadAsArray()
