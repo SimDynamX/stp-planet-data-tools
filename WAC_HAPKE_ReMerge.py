@@ -233,3 +233,9 @@ out_ds.FlushCache()
 out_ds = None
 
 print(f"Wrote full‐pole mosaic: {output_file}")
+
+
+
+ds : gdal.Dataset = gdal.Open(path.join(inputDir, "Moon","Global","RGB","WAC_HAPKE_3BAND_Merged.tiff"), gdal.GA_ReadOnly)
+print("Output dataset info:")
+print(gdal.Info(ds))
