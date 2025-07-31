@@ -74,4 +74,4 @@ projDir = os.path.join(thisDir, "proj")
 
 ds : gdal.Dataset = gdal.Open(path.join(inputDir, "Moon","Global","RGB","WAC_HAPKE_3BAND_Merged.tiff"), gdal.GA_ReadOnly)
 # ds : gdal.Dataset = gdal.Open(path.join(inputDir, "Moon","Global","Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif"), gdal.GA_ReadOnly)
-print(gdal.Info(ds))
+print(gdal.Info(ds, stats=True))
