@@ -350,6 +350,13 @@ if __name__ == "__main__":
         3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=20, nodata_val=float_nodata)
     Gnomonic_Warp([path.join("Mars","Local","InSight","F02_036761_1828_F04_037262_1841_20m_DTM_destripe.tif")], \
         3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=20, nodata_val=float_nodata)
+    
+    
+    # Tianwen-1 Color Segments"F:\SDX_ADATA\stp-planet-data-tools\input\Mars\Local\KaiserCrater\HX1_GRAS_MoRIC_DOM_076m_E05_48S023E_A.tif"
+    # Around Kaiser Crater area
+    Gnomonic_Warp_Global([path.join("Mars","Local","KaiserCrater","HX1_GRAS_MoRIC_DOM_076m_E05_48S023E_A.tif")], \
+        3396190.0, "mars_gnom", pbar, meters_per_pixel=76)
+    
     # LavaFlows
     Gnomonic_Warp([path.join("Mars","Local","LavaFlows","DEM_18m_Cerberus_Palus_wrinkle_ridge.tif")], \
         3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=18, nodata_val=float_nodata)
