@@ -419,7 +419,7 @@ if __name__ == "__main__":
 
     # Vesta
     Gnomonic_Warp_Global([path.join("Vesta","Global","Vesta_Dawn_HAMO_DTM_DLR_Global_48ppd.tif")], \
-        289000, "vesta_gnom", pbar, meters_per_pixel=105)
+        2.55e5, "vesta_gnom", pbar, meters_per_pixel=93)
     
 
     # Io
