@@ -354,8 +354,26 @@ if __name__ == "__main__":
     
     # Tianwen-1 Color Segments"F:\SDX_ADATA\stp-planet-data-tools\input\Mars\Local\KaiserCrater\HX1_GRAS_MoRIC_DOM_076m_E05_48S023E_A.tif"
     # Around Kaiser Crater area
-    Gnomonic_Warp_Global([path.join("Mars","Local","KaiserCrater","HX1_GRAS_MoRIC_DOM_076m_E05_48S023E_A.tif")], \
-        3396190.0, "mars_gnom", pbar, meters_per_pixel=76)
+    # Gnomonic_Warp_Global([path.join("Mars","Local","KaiserCrater","HX1_GRAS_MoRIC_DOM_076m_E05_48S023E_A.tif")], \
+    #     3396190.0, "mars_gnom", pbar, meters_per_pixel=76)
+    Gnomonic_Warp([path.join("Mars","Local","KaiserCrater","HX1_GRAS_MoRIC_DOM_076m_E05_48S023E_A.tif")], \
+        3396190.0, "mars_gnom", "SPole", pbar, meters_per_pixel=76, input_nodata_val=0)
+    # Gnomonic_Warp([path.join("Mars","Local","KaiserCrater","HX1_GRAS_MoRIC_DOM_076m_E05_48S023E_A.tif")], \
+    #     3396190.0, "mars_gnom_Eq0", pbar, meters_per_pixel=76, 
+    #     warpoptions = gdal.WarpOptions( \
+    #             resampleAlg="bilinear", \
+    #             dstSRS=path.join(projDir, "mars_gnom_Eq0"),
+    #             outputBounds=[-radius_plus, -radius_plus, radius_plus, radius_plus],
+    #             xRes=76,
+    #             yRes=76,
+    #             srcNodata=None,
+    #             dstNodata=0,
+    #             format="GTiff",
+    #             creationOptions = ['COMPRESS=LZW'],
+    #             multithread=True,
+    #             callback=progress_callback,
+    #             callback_data=pbar \
+    #             ))
     
     # LavaFlows
     Gnomonic_Warp([path.join("Mars","Local","LavaFlows","DEM_18m_Cerberus_Palus_wrinkle_ridge.tif")], \
