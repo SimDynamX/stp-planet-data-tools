@@ -16,5 +16,5 @@ six>=1.15.0
 progressbar
 alive-progress
 requests[security]
-PySide2>=5.15.2.1
+PySide6
 PyQt5>=5.15.5

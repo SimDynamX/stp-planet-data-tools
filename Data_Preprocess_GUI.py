@@ -50,13 +50,13 @@ from shutil import copyfile
 from colorama import Fore, Back, Style
 # import progressbar as pb
 
-from PySide2.QtWidgets import (QApplication, QVBoxLayout, QWidget, QPushButton, 
+from PySide6.QtWidgets import (QApplication, QVBoxLayout, QWidget, QPushButton, 
                                QFileDialog, QListWidget, QDoubleSpinBox, QLineEdit, 
                                QCheckBox, QProgressBar, QLabel, QComboBox,QFileDialog, QMessageBox,
                                QMainWindow, QDockWidget, QTextEdit)
 
 # from PyQt5.QtWidgets import QMainWindow, QDockWidget, QTextEdit, QListWidget
-from PyQt5.QtCore import QCoreApplication, Qt
+# from PyQt5.QtCore import QCoreApplication, Qt
 
 #######################################
 ### GLOBALS ###########################
@@ -397,11 +397,6 @@ class AppGUI(QWidget):
         self.progBar.setValue(0)
         layout.addWidget(self.progBar)
 
-        # Create a quit button
-        self.quit_button = QPushButton('Quit', self)
-        self.quit_button.clicked.connect(QCoreApplication.instance().quit)
-        layout.addWidget(self.quit_button)  # Add other widgets as needed
-
         self.setLayout(layout)
 
     def toggle_global_checkbox(self):
@@ -499,5 +494,5 @@ if __name__ == "__main__":
     # sys.exit(app.exec_())
     # time.sleep(10)
     # exit()
-    app.exec_()
+    app.exec()
     

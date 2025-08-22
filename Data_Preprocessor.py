@@ -52,6 +52,8 @@ from shutil import copyfile
 from colorama import Fore, Back, Style
 import progressbar as pb
 
+import numpy.ma as ma
+
 #######################################
 ### GLOBALS ###########################
 
@@ -167,6 +169,117 @@ def Gnomonic_Warp_Global(inputFiles: list, radius: float, prjFileRoot: str, \
     Gnomonic_Warp(inputFiles, radius, prjFileRoot, "NPole", progBar, meters_per_pixel, True, input_nodata_val, nodata_val)
     Gnomonic_Warp(inputFiles, radius, prjFileRoot, "SPole", progBar, meters_per_pixel, True, input_nodata_val, nodata_val)
 
+def Gnomonic_Warp_IRBtoRGB(inputFiles: list, radius: float, prjFileRoot: str, \
+    prjFileSide: str, progBar: pb.ProgressBar, meters_per_pixel = 0.0, \
+    forceFullSideExtents = False, input_nodata_val = None, nodata_val = 0, warpoptions = None):
+    print("-------------------")
+    print("-- Gnomonic_Warp --")
+    print("\t inputFile:",inputFiles)
+    print("\t radius:",radius)
+    prjFile = prjFileRoot + "_" + prjFileSide + ".prj"
+    print("\t prjFile:",prjFile)
+    
+    inpath = []
+
+    for inputFile in inputFiles:
+        inpath.append(path.join(inputDir,inputFile))
+    outpath = path.join(outputDir,inputFiles[0])
+    outpath_split = path.splitext(outpath)
+    # outpath = outpath_split[0] + "_Gnom_" + prjFileSide + outpath_split[1]
+    outpath = outpath_split[0] + "_Gnom_" + prjFileSide + ".tif"
+
+    if(os.path.exists(outpath)):
+        print("WARNING: there is already a file at "+outpath+"; skipped this warp.")
+        return
+    elif(not path.exists(path.split(outpath)[0])):
+        print("Making new output directory \"" + path.split(outpath)[0] +"\"")
+        os.makedirs(path.split(outpath)[0])
+    
+    radius_plus = radius * 33.0/32.0
+
+    if(warpoptions == None):
+        if(forceFullSideExtents):
+            warpoptions = gdal.WarpOptions( \
+                resampleAlg="bilinear", \
+                dstSRS=path.join(projDir, prjFile),
+                outputBounds=[-radius_plus, -radius_plus, radius_plus, radius_plus],
+                xRes=meters_per_pixel,
+                yRes=meters_per_pixel,
+                srcNodata=input_nodata_val,
+                dstNodata=nodata_val,
+                format="GTiff",
+                creationOptions = ['COMPRESS=LZW'],
+                multithread=True,
+                callback=progress_callback,
+                callback_data=progBar \
+                )
+        else:
+            warpoptions = gdal.WarpOptions( \
+                resampleAlg="bilinear", \
+                dstSRS=path.join(projDir, prjFile),
+                xRes=meters_per_pixel,
+                yRes=meters_per_pixel,
+                srcNodata=input_nodata_val,
+                dstNodata=nodata_val,
+                format="GTiff",
+                creationOptions = ['COMPRESS=LZW'],
+                multithread=True,
+                callback=progress_callback,
+                callback_data=progBar \
+                )
+    
+    for input_path in inpath:
+        input_name, input_extension = os.path.splitext(input_path)
+        output_path = input_name + "_RGB" + input_extension
+        dataset = gdal.Open(input_path)
+        # IR_band = dataset.GetRasterBand(1).ReadAsArray()
+        red_band = dataset.GetRasterBand(2).ReadAsArray()
+        greenblue_band = dataset.GetRasterBand(3).ReadAsArray()
+        rgb_image = np.dstack((red_band, greenblue_band, 2.0 * greenblue_band - 0.3 * red_band))
+
+        driver = gdal.GetDriverByName("GTiff")
+        out_dataset = driver.Create(output_path, dataset.RasterXSize, dataset.RasterYSize, 3, gdal.GDT_Byte)
+        out_dataset.SetGeoTransform(dataset.GetGeoTransform())
+        out_dataset.SetProjection(dataset.GetProjection())
+        for i in range(3):
+            out_dataset.GetRasterBand(i + 1).WriteArray(rgb_image[:, :, i])
+        out_dataset = None
+        dataset = None
+    progBar.start()
+    gdal.Warp(outpath, inpath, options=warpoptions)
+    progBar.finish()
+
+
+def IRBtoRGB(inputFile: str, radius: float, DNscale: float, DNoffset: float):
+    print("-------------------")
+    print("-- IRBtoRGB --")
+    print("\t inputFile:", inputFile)
+    print("\t radius:", radius)
+    
+    inpath = path.join(inputDir, inputFile)
+    
+    input_name, input_extension = os.path.splitext(inpath)
+    output_path = input_name + "_RGB" + input_extension
+    dataset = gdal.Open(inpath)
+    # IR_band = dataset.GetRasterBand(1).ReadAsArray()
+    red_band = dataset.GetRasterBand(2).ReadAsArray()
+    greenblue_band = dataset.GetRasterBand(3).ReadAsArray()
+    # red_band = (dataset.GetRasterBand(2).ReadAsArray() - DNoffset) / DNscale
+    # greenblue_band = (dataset.GetRasterBand(3).ReadAsArray() - DNoffset) / DNscale
+    rgb_image = np.dstack((red_band, greenblue_band, 2.0 * greenblue_band - 0.3 * red_band))
+
+    driver: gdal.Driver = gdal.GetDriverByName("GTiff")
+    out_dataset: gdal.Dataset = driver.Create(output_path, dataset.RasterXSize, dataset.RasterYSize, 3, gdal.GDT_Byte, options = ['COMPRESS=LZW'])
+    out_dataset.SetGeoTransform(dataset.GetGeoTransform())
+    out_dataset.SetProjection(dataset.GetProjection())
+    for i in range(3):
+        band: gdal.Band = out_dataset.GetRasterBand(i + 1)
+        mask = rgb_image[:, :, i] != 0
+        band.WriteArray(mask * np.clip((rgb_image[:, :, i] * DNscale + DNoffset) * 255.0 / 0.15, 0, 255).astype(np.uint8))
+        band.SetNoDataValue(0)
+    out_dataset = None
+    dataset = None
+
 
 #######################################
 ### MAIN ##############################
@@ -191,6 +304,71 @@ if __name__ == "__main__":
     print("GDAL Version:", gdal.VersionInfo())
 
     pbar = pb.ProgressBar()
+
+    # Gnomonic_Warp([path.join("Earth", "Local", "Texas", "N29-30_W095-100","N29W095.hgt"), 
+    #                path.join("Earth", "Local", "Texas", "N29-30_W095-100","N29W096.hgt"), 
+    #                path.join("Earth", "Local", "Texas", "N29-30_W095-100","N29W097.hgt"), 
+    #                path.join("Earth", "Local", "Texas", "N29-30_W095-100","N29W098.hgt"),
+    #                path.join("Earth", "Local", "Texas", "N29-30_W095-100","N29W099.hgt"), 
+    #                path.join("Earth", "Local", "Texas", "N29-30_W095-100","N29W100.hgt"), 
+    #                path.join("Earth", "Local", "Texas", "N29-30_W095-100","N30W095.hgt"), 
+    #                path.join("Earth", "Local", "Texas", "N29-30_W095-100","N30W096.hgt"),
+    #                path.join("Earth", "Local", "Texas", "N29-30_W095-100","N30W097.hgt"), 
+    #                path.join("Earth", "Local", "Texas", "N29-30_W095-100","N30W098.hgt"), 
+    #                path.join("Earth", "Local", "Texas", "N29-30_W095-100","N30W099.hgt"), 
+    #                path.join("Earth", "Local", "Texas", "N29-30_W095-100","N30W100.hgt")],
+    #                6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30, input_nodata_val=int16_nodata, nodata_val=int16_nodata)
+    # Gnomonic_Warp([path.join("Earth", "Local", "Texas", "Bryan", "BryanAltimetry_2ft.tif")], 6.378137e6, "earth_gnom", "Eq_270", 
+    #               pbar, meters_per_pixel=1, input_nodata_val=-9999, nodata_val=float_nodata)
+
+    # Gnomonic_Warp([path.join("Earth", "Local", "Nevada30mHeightmaps", "Nevada30m.tif")], 6.378137e6, "earth_gnom", "Eq_270", 
+    #               pbar, meters_per_pixel=30, input_nodata_val=int16_nodata, nodata_val=int16_nodata)
+
+    # Gnomonic_Warp([path.join("N44-45W111-112","N45W112.hgt")], \
+    #               6.378137e6, "earth_gnom", "NPole", pbar, meters_per_pixel=15, input_nodata_val=int16_nodata, nodata_val=int16_nodata)
+    # Gnomonic_Warp([path.join("N44-45W111-112","T1_B1.TIF")], \
+    #               6.378137e6, "earth_gnom", "NPole", pbar, meters_per_pixel=15)
+    # Gnomonic_Warp([path.join("N44-45W111-112","T1_B2.TIF")], \
+    #               6.378137e6, "earth_gnom", "NPole", pbar, meters_per_pixel=15)
+    # Gnomonic_Warp([path.join("N44-45W111-112","T1_B3.TIF")], \
+    #               6.378137e6, "earth_gnom", "NPole", pbar, meters_per_pixel=15)
+    
+    if (False):
+        Gnomonic_Warp([path.join("Moon","Local","SouthPole","JSC_ER7_LUNAR-SP_20cm_Site06-Nobile.tif")], \
+            1737400.0, "moon_gnom", "SPole", pbar, meters_per_pixel=0.2, nodata_val=float_nodata)
+
+    if (False):
+        Gnomonic_Warp([path.join("Moon","Local","SouthPole","Lunar_LROnac_Haworth_sfs-dem_1m_v3.tif")], \
+            1737400.0, "moon_gnom", "SPole", pbar, meters_per_pixel=1.0, nodata_val=float_nodata)
+
+    if (False):
+        Gnomonic_Warp([path.join("Moon","Local","SouthPole","Site20v2_final_adj_5mpp_surf.tif")], \
+            1737400.0, "moon_gnom", "SPole", pbar, meters_per_pixel=5.0, nodata_val=float_nodata)
+    
+    if (False):
+        Gnomonic_Warp([path.join("Mars","Local","KaiserCrater","KaiserCrater_DTEED_039245_1325_039944_1325_A01.IMG")], \
+            3396190.0, "mars_gnom", "SPole", pbar, meters_per_pixel=2.0, nodata_val=float_nodata)
+        Gnomonic_Warp([path.join("Mars","Local","KaiserCrater","KaiserCrater_DTEEC_007110_1325_006820_1325_A01.IMG")], \
+            3396190.0, "mars_gnom", "SPole", pbar, meters_per_pixel=1.0, nodata_val=float_nodata)
+
+    if (False):
+        # Gnomonic_Warp_IRBtoRGB([path.join("Mars","Local", "KaiserCrater","KaiserCrater_ESP_077053_1325_COLOR.tif"),
+        #                         path.join("Mars","Local", "KaiserCrater","KaiserCrater_ESP_075233_1325_COLOR.tif"),
+        #                         path.join("Mars","Local", "KaiserCrater","KaiserCrater_ESP_039944_1325_COLOR.tif"),
+        #                         path.join("Mars","Local", "KaiserCrater","KaiserCrater_ESP_015918_1325_COLOR.tif")], \
+        #     3396190.0, "mars_gnom", "SPole", pbar, meters_per_pixel=2.0, nodata_val=float_nodata)
+        # IRBtoRGB(path.join("Mars","Local", "KaiserCrater","KaiserCrater_ESP_077053_1325_COLOR.tif"), 3396190.0, 7.75723930288998e-05, 0.014396626980619)
+        IRBtoRGB(path.join("Mars","Local", "KaiserCrater","KaiserCrater_ESP_075233_1325_COLOR.tif"), 3396190.0, 9.88135507176454e-05, 0.030335895006202)
+        IRBtoRGB(path.join("Mars","Local", "KaiserCrater","KaiserCrater_ESP_039944_1325_COLOR.tif"), 3396190.0, 9.5642557351721e-05, 0.03689312696858)
+        # IRBtoRGB(path.join("Mars","Local", "KaiserCrater","KaiserCrater_ESP_015918_1325_COLOR.tif"), 3396190.0, 7.53167147693065e-05, 0.029399044132158)
+
+    if (True):
+        Gnomonic_Warp([path.join("Mars", "Local", "KaiserCrater", "KaiserCrater_ESP_075233_1325_COLOR_RGB_Clipped.tif")], \
+            3396190.0, "mars_gnom", "SPole", pbar, meters_per_pixel=0.5, nodata_val=0)
+        Gnomonic_Warp([path.join("Mars", "Local", "KaiserCrater", "KaiserCrater_ESP_039944_1325_COLOR_RGB_Clipped.tif")], \
+            3396190.0, "mars_gnom", "SPole", pbar, meters_per_pixel=0.5, nodata_val=0)
+
+    exit(0)
 
     # Moon Global
     Gnomonic_Warp_Global([path.join("Moon","Global","Lunar_LRO_LOLA_Global_LDEM_118m_Mar2014.tif")], \
