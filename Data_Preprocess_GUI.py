@@ -397,6 +397,11 @@ class AppGUI(QWidget):
         self.progBar.setValue(0)
         layout.addWidget(self.progBar)
 
+        # # Create a quit button
+        # self.quit_button = QPushButton('Quit', self)
+        # self.quit_button.clicked.connect(QCoreApplication.instance().quit)
+        # layout.addWidget(self.quit_button)  # Add other widgets as needed
+
         self.setLayout(layout)
 
     def toggle_global_checkbox(self):
