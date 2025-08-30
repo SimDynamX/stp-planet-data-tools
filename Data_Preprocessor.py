@@ -403,10 +403,10 @@ if __name__ == "__main__":
         Gnomonic_Warp([path.join("Moon","Local","SouthPole","Site20v2_final_adj_5mpp_surf.tif")], \
             1737400.0, "moon_gnom", "SPole", pbar, meters_per_pixel=5.0, nodata_val=float_nodata)
     
-    if (False):
-        Gnomonic_Warp([path.join("Mars","Local","KaiserCrater","KaiserCrater_DTEED_039245_1325_039944_1325_A01.IMG")], \
+    if (True):
+        Gnomonic_Warp([path.join("Mars","Local","KaiserCrater","DTEED_039245_1325_039944_1325_A01.IMG")], \
             3396190.0, "mars_gnom", "SPole", pbar, meters_per_pixel=2.0, nodata_val=float_nodata)
-        Gnomonic_Warp([path.join("Mars","Local","KaiserCrater","KaiserCrater_DTEEC_007110_1325_006820_1325_A01.IMG")], \
+        Gnomonic_Warp([path.join("Mars","Local","KaiserCrater","DTEEC_007110_1325_006820_1325_A01.IMG")], \
             3396190.0, "mars_gnom", "SPole", pbar, meters_per_pixel=1.0, nodata_val=float_nodata)
 
     if (False):
@@ -420,7 +420,7 @@ if __name__ == "__main__":
         IRBtoRGB(path.join("Mars","Local", "KaiserCrater","KaiserCrater_ESP_039944_1325_COLOR.tif"), 3396190.0, 9.5642557351721e-05, 0.03689312696858)
         # IRBtoRGB(path.join("Mars","Local", "KaiserCrater","KaiserCrater_ESP_015918_1325_COLOR.tif"), 3396190.0, 7.53167147693065e-05, 0.029399044132158)
 
-    if (True):
+    if (False):
         Gnomonic_Warp([path.join("Mars", "Local", "KaiserCrater", "KaiserCrater_ESP_075233_1325_COLOR_RGB_Clipped.tif")], \
             3396190.0, "mars_gnom", "SPole", pbar, meters_per_pixel=0.5, nodata_val=0)
         Gnomonic_Warp([path.join("Mars", "Local", "KaiserCrater", "KaiserCrater_ESP_039944_1325_COLOR_RGB_Clipped.tif")], \
