@@ -312,7 +312,7 @@ class AppGUI(QWidget):
             },
             'Enceladus':{
                 'proj': 'enceladus_gnom',
-                'radius': 252100.0
+                'radius': 265200.0
             },
             'Europa':{
                 'proj': 'europa_gnom',
@@ -360,7 +360,7 @@ class AppGUI(QWidget):
             },
             'Vesta':{
                 'proj': 'vesta_gnom',
-                'radius': 289000.0
+                'radius': 255000.0
             },
             }
         

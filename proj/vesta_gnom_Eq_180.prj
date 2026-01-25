@@ -1,7 +1,7 @@
 PROJCS["Vesta_Gnomonic_Eq180",
     GEOGCS["Vesta 2000",
         DATUM["D_Vesta_2000",
-            SPHEROID["Vesta_2000_IAU_IAG",289000,0.0]],
+            SPHEROID["Vesta_2000_IAU_IAG",255000,0.0]],
         PRIMEM["Greenwich",0],
         UNIT["Decimal_Degree",0.0174532925199433]],
     PROJECTION["Gnomonic"],

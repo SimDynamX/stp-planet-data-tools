@@ -310,6 +310,8 @@ if __name__ == "__main__":
 
     # Saturn Moons
     # Enceladus https://astrogeology.usgs.gov/search?pmi-target=enceladus
+    #TODO https://astrogeology.usgs.gov/search/map/enceladus-cassini-global-mosaic-100m-schenk
+    #TODO https://astrogeology.usgs.gov/search/map/enceladus-cassini-global-dem-200m-schenk
     DownloadIfNotExists(path.join("Saturn","Enceladus","Global"),"https://planetarymaps.usgs.gov/mosaic/Enceladus/enceladus_cassini_iss_shapemodel_bland_2019/enceladus_2019pm_radius.tif")
     DownloadIfNotExists(path.join("Saturn","Enceladus","Global"),"https://astrogeology.usgs.gov/search/map/Enceladus/enceladus_cassini_iss_shapemodel_bland_2019/enceladus_2019pm_topography") #TODO radius vs altitude ellipsoid stuff
     DownloadIfNotExists(path.join("Saturn","Enceladus","Global"),"https://astropedia.astrogeology.usgs.gov/download/Enceladus/enceladus_cassini_iss_shapemodel_bland_2019/ancillary/enceladus_2019pm_nps_radius.tif")

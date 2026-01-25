@@ -336,6 +336,55 @@ def convert_raster_16_8(input_file, output_file, scale_factor, src_nodata, dst_n
 
     print(f"Conversion complete. Output saved to: {output_file}")
 
+def convert_raster_32_8(input_file, output_file, scale_factor, src_nodata, dst_nodata):
+   # Open the input raster dataset
+    src_ds = gdal.Open(input_file, gdal.GA_ReadOnly)
+    if src_ds is None:
+        raise FileNotFoundError(f"Could not open input file: {input_file}")
+
+    # Get the source band
+    src_band = src_ds.GetRasterBand(1)  # Assuming it's a single-band raster
+    src_band.SetNoDataValue(src_nodata)
+    
+    src_data = src_band.ReadAsArray()
+    src_data[src_data == src_nodata] = 0  # Temporarily replace nodata for scaling
+
+    # Apply scale factor and clamp the data to uint8 range
+    scaled_data = src_data.astype(float) * scale_factor
+    clamped_data = np.clip(scaled_data, 0, 255).astype(np.uint8)
+
+    # Replace 0 with dst_nodata after scaling
+    scaled_data[scaled_data == 0] = dst_nodata
+
+    # Create the output raster dataset
+    driver = gdal.GetDriverByName('GTiff')
+    dst_ds = driver.Create(
+        output_file,
+        src_ds.RasterXSize,
+        src_ds.RasterYSize,
+        1,  # Number of bands
+        gdal.GDT_Byte  # uint8 type
+    )
+
+    if dst_ds is None:
+        raise RuntimeError(f"Could not create output file: {output_file}")
+
+    # Set the geotransform and projection from the source dataset
+    dst_ds.SetGeoTransform(src_ds.GetGeoTransform())
+    dst_ds.SetProjection(src_ds.GetProjection())
+
+    # Write the processed data to the output band
+    dst_band = dst_ds.GetRasterBand(1)
+    dst_band.WriteArray(clamped_data)
+    dst_band.SetNoDataValue(dst_nodata)
+
+    # Flush and close datasets
+    dst_band.FlushCache()
+    dst_ds.FlushCache()
+    dst_ds = None
+    src_ds = None
+
+    print(f"Conversion complete. Output saved to: {output_file}")
 
 
 
@@ -620,14 +669,26 @@ if __name__ == "__main__":
 
 
     # Enceladus
-    Gnomonic_Warp_Global([path.join("Saturn", "Enceladus","Global","enceladus_2019pm_radius.tif")], \
-        252100, "enceladus_gnom", pbar, meters_per_pixel=2200)
-    Gnomonic_Warp_Global([path.join("Saturn", "Enceladus","Global","Enceladus_Cassini_ISS_Global_Mosaic_100m_HPF.tif")], \
-        252100, "enceladus_gnom", pbar, meters_per_pixel=100)
-    Gnomonic_Warp_Global([path.join("Saturn", "Enceladus","Global","enceladus_2019pm_nps_radius.tif")], \
-        252100, "enceladus_gnom", pbar, meters_per_pixel=2200)
-    Gnomonic_Warp_Global([path.join("Saturn", "Enceladus","Global","enceladus_2019pm_sps_radius.tif")], \
-        252100, "enceladus_gnom", pbar, meters_per_pixel=2200)
+    # These 4 here are old versions, replaced by the Schenk 2024 data
+    # Gnomonic_Warp_Global([path.join("Saturn", "Enceladus","Global","enceladus_2019pm_radius.tif")], \
+    #     252100, "enceladus_gnom", pbar, meters_per_pixel=2200)
+    # Gnomonic_Warp_Global([path.join("Saturn", "Enceladus","Global","Enceladus_Cassini_ISS_Global_Mosaic_100m_HPF.tif")], \
+    #     252100, "enceladus_gnom", pbar, meters_per_pixel=100)
+    # Gnomonic_Warp_Global([path.join("Saturn", "Enceladus","Global","enceladus_2019pm_nps_radius.tif")], \
+    #     252100, "enceladus_gnom", pbar, meters_per_pixel=2200)
+    # Gnomonic_Warp_Global([path.join("Saturn", "Enceladus","Global","enceladus_2019pm_sps_radius.tif")], \
+    #     252100, "enceladus_gnom", pbar, meters_per_pixel=2200)
+    
+    # convert from 16-bit to 8-bit and scale
+    # scale = 0.0001
+    scale = 255.0/22008.0 #TODO be more scientific; this is just the max value from the data
+    input_raster = path.join(inputDir, "Saturn", "Enceladus","Global","Enceladus_Cassini_mosaic_global_100m_schenk2024.tif")
+    output_raster = path.join(inputDir, "Saturn", "Enceladus","Global","Enceladus_Cassini_mosaic_global_100m_schenk2024_8b.tif")
+    convert_raster_32_8(input_raster, output_raster, scale, -3.40282265508890445e+38, 0)
+    Gnomonic_Warp_Global([path.join("Saturn", "Enceladus","Global","Enceladus_Cassini_mosaic_global_100m_schenk2024_8b.tif")], \
+        256200, "enceladus_gnom", pbar, meters_per_pixel=100)
+    Gnomonic_Warp_Global([path.join("Saturn", "Enceladus","Global","Enceladus_Cassini_DEM_global_200m_schenk2024.tif")], \
+        256200, "enceladus_gnom", pbar, meters_per_pixel=200)
     # under TODO
     # nps and sps are ancillary data and no context is given about mpp
 
