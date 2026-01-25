@@ -233,6 +233,9 @@ if __name__ == "__main__":
     DownloadIfNotExists(path.join("Moon","Local","SouthPole"),"https://astropedia.astrogeology.usgs.gov/download/Moon/LRO/LOLA/ancillary/LRO_LOLA_DEM_SPolar875_10m.tif")
     DownloadIfNotExists(path.join("Moon","Local","SouthPole"),"https://astropedia.astrogeology.usgs.gov/downloadBig/Moon/LRO/LOLA/ancillary/LRO_LOLA_DEM_SPole75_30m.tif")
     DownloadIfNotExists(path.join("Moon","Local","SouthPole"),"https://astropedia.astrogeology.usgs.gov/download/Moon/LRO/MOON_LRO_NAC_DEM_89S210E_4mp.tif")
+
+    #TODO GSFC-hosted landing site DEMs: https://pgda.gsfc.nasa.gov/products/78
+
     #TODO add links for these (Kevin Cannon website):
     # # Moon South Pole Overlay Data
     # Gnomonic_Warp(path.join("Moon","Local","SouthPole","SP_IceFavorabilityIndex.tif"), \

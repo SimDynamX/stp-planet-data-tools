@@ -394,14 +394,19 @@ if __name__ == "__main__":
     if (False):
         Gnomonic_Warp([path.join("Moon","Local","SouthPole","JSC_ER7_LUNAR-SP_20cm_Site06-Nobile.tif")], \
             1737400.0, "moon_gnom", "SPole", pbar, meters_per_pixel=0.2, nodata_val=float_nodata)
-
-    if (False):
+    # Same area as above, lower res due to purely from laser altimetry
+    if (True):
+        Gnomonic_Warp([path.join("Moon","Local","SouthPole","Site06_final_adj_5mpp_surf.tif")], \
+            1737400.0, "moon_gnom", "SPole", pbar, meters_per_pixel=5.0, nodata_val=float_nodata)
+        
+    if (True):
         Gnomonic_Warp([path.join("Moon","Local","SouthPole","Lunar_LROnac_Haworth_sfs-dem_1m_v3.tif")], \
             1737400.0, "moon_gnom", "SPole", pbar, meters_per_pixel=1.0, nodata_val=float_nodata)
 
-    if (False):
+    if (True):
         Gnomonic_Warp([path.join("Moon","Local","SouthPole","Site20v2_final_adj_5mpp_surf.tif")], \
             1737400.0, "moon_gnom", "SPole", pbar, meters_per_pixel=5.0, nodata_val=float_nodata)
+
     
     if (True):
         Gnomonic_Warp([path.join("Mars","Local","KaiserCrater","DTEED_039245_1325_039944_1325_A01.IMG")], \
@@ -426,7 +431,6 @@ if __name__ == "__main__":
         Gnomonic_Warp([path.join("Mars", "Local", "KaiserCrater", "KaiserCrater_ESP_039944_1325_COLOR_RGB_Clipped.tif")], \
             3396190.0, "mars_gnom", "SPole", pbar, meters_per_pixel=0.5, nodata_val=0)
 
-    exit(0)
     # LROC dataset info: https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DOCUMENT/RDRSIS.PDF
 
     # Moon Global
@@ -468,7 +472,7 @@ if __name__ == "__main__":
         1737400.0, "moon_gnom", "SPole", pbar, meters_per_pixel=30, nodata_val=int16_nodata)
     Gnomonic_Warp([path.join("Moon","Local","SouthPole","MOON_LRO_NAC_DEM_89S210E_4mp.tif")], \
         1737400.0, "moon_gnom", "SPole", pbar, meters_per_pixel=4, nodata_val=float_nodata)
-    if(False):
+    if(True):
         # NASA internal upscaled crater 20cm dataset
         Gnomonic_Warp([path.join("Moon","Local","SouthPole","LDEM_Site01-Site-04_upscale_craters.tif")], \
             1737400.0, "moon_gnom", "SPole", pbar, meters_per_pixel=0.2, nodata_val=float_nodata)
@@ -910,7 +914,7 @@ if __name__ == "__main__":
         Gnomonic_Warp([path.join("Earth","Local","Caucasus", "dem_200_000.tif")], \
             6.378137e6, "earth_gnom", "NPole", pbar, meters_per_pixel=50, nodata_val=float_nodata)
         
-    if False:
+    if True:
         Gnomonic_Warp([path.join("Earth","Local","Texas", "BigBend", "N29W104.hgt")], \
             6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30, nodata_val=int16_nodata)
 
