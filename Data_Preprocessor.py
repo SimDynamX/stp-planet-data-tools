@@ -975,6 +975,21 @@ if __name__ == "__main__":
             6.378137e6, "earth_gnom", "NPole", pbar, meters_per_pixel=50, nodata_val=float_nodata)
         
     if True:
+        # nevada_dem_files = [f for f in listdir(path.join(inputDir,"Earth","Local","South Nevada")) if f.endswith(".hgt")]
+        nevada_dem_files = []
+        for i in range(35,39):
+            for j in range(114,121):
+                if (i == 37 and j == 114):
+                    pass
+                else:
+                    nevada_dem_files.append(path.join("Earth","Local","South Nevada", f"n{i}w{j}.hgt"))
+                    # Gnomonic_Warp([path.join("Earth","Local","South Nevada", f"n{i}w{j}.hgt")], \
+                    # 6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30, nodata_val=int16_nodata)
+        Gnomonic_Warp(nevada_dem_files, \
+                    6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30, nodata_val=int16_nodata)
+        
+
+    if False:
         Gnomonic_Warp([path.join("Earth","Local","Texas", "BigBend", "N29W104.hgt")], \
             6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30, nodata_val=int16_nodata)
 
