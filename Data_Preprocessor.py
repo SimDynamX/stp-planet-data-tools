@@ -35,7 +35,7 @@ sc.easy_AutoVenv(__file__, EXPECTED_REL_PATH_TO_ANCHOR)
 ### IMPORTS ###########################
 
 import os
-from os import path
+from os import listdir, path
 from sys import platform
 import sys
 import signal
