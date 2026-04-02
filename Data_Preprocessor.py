@@ -425,8 +425,12 @@ if __name__ == "__main__":
     #                path.join("Earth", "Local", "Texas", "N29-30_W095-100","N30W099.hgt"), 
     #                path.join("Earth", "Local", "Texas", "N29-30_W095-100","N30W100.hgt")],
     #                6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30, input_nodata_val=int16_nodata, nodata_val=int16_nodata)
-    # Gnomonic_Warp([path.join("Earth", "Local", "Texas", "Bryan", "BryanAltimetry_2ft.tif")], 6.378137e6, "earth_gnom", "Eq_270", 
-    #               pbar, meters_per_pixel=1, input_nodata_val=-9999, nodata_val=float_nodata)
+    Gnomonic_Warp([path.join("Earth", "Local", "KSC", "KSC_DEM.tif")], 6.378137e6, "earth_gnom", "Eq_270", 
+                  pbar, meters_per_pixel=2.5, input_nodata_val=-999999, nodata_val=float_nodata)
+    Gnomonic_Warp([path.join("Earth", "Local", "KSC", "KSC_Color.tif")], \
+            6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=2.0, input_nodata_val=0, nodata_val=0)
+    
+    # exit(0)
 
     # Gnomonic_Warp([path.join("Earth", "Local", "Nevada30mHeightmaps", "Nevada30m.tif")], 6.378137e6, "earth_gnom", "Eq_270", 
     #               pbar, meters_per_pixel=30, input_nodata_val=int16_nodata, nodata_val=int16_nodata)
