@@ -787,9 +787,9 @@ if __name__ == "__main__":
     # blue_marble_mpp_mult = 2
 
     #21600x21600 pixels
-    blue_marble_mpp_22k = 463.77
+    blue_marble_mpp_22k = 463.8312
     #10800x10800 pixels
-    blue_marble_mpp_11k = 927.55
+    blue_marble_mpp_11k = 927.6624
 
     # https://earthobservatory.nasa.gov/features/NightLights
     if (False):
@@ -836,99 +836,99 @@ if __name__ == "__main__":
     # Possibly higher fidelity than Blue Marble Next Generation: https://github.com/lyrk/true-marble-edit?tab=readme-ov-file
 
     #https://gis.stackexchange.com/a/334024/144120
-    print("Wait for georeferencing of blue marble datasets...")
-    print("A1")
-    if(not path.exists(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.A1.tif"))):
-        gdal.Translate(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.A1.tif"),
-            path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.A1.png"),
-            options=gdal.TranslateOptions(resampleAlg="bilinear", \
-                    outputBounds=[-180, 90, -90, 0],
-                    outputSRS="WGS84",
-                    format="GTiff",
-                    creationOptions = ['COMPRESS=LZW'])
-            )
-    print("B1")
-    if(not path.exists(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.B1.tif"))):
-        gdal.Translate(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.B1.tif"),
-            path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.B1.png"),
-            options=gdal.TranslateOptions(resampleAlg="bilinear", \
-                    outputBounds=[-90, 90, 0, 0],
-                    outputSRS="WGS84",
-                    format="GTiff",
-                    creationOptions = ['COMPRESS=LZW'])
-            )
-    print("C1")
-    if(not path.exists(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.C1.tif"))):
-        gdal.Translate(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.C1.tif"),
-            path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.C1.png"),
-            options=gdal.TranslateOptions(resampleAlg="bilinear", \
-                    outputBounds=[0, 90, 90, 0],
-                    outputSRS="WGS84",
-                    format="GTiff",
-                    creationOptions = ['COMPRESS=LZW'])
-            )
-    print("D1")
-    if(not path.exists(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.D1.tif"))):
-        gdal.Translate(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.D1.tif"),
-            path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.D1.png"),
-            options=gdal.TranslateOptions(resampleAlg="bilinear", \
-                    outputBounds=[90, 90, 180, 0],
-                    outputSRS="WGS84",
-                    format="GTiff",
-                    creationOptions = ['COMPRESS=LZW'])
-            )
-    print("A2")
-    if(not path.exists(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.A2.tif"))):
-        gdal.Translate(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.A2.tif"),
-            path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.A2.png"),
-            options=gdal.TranslateOptions(resampleAlg="bilinear", \
-                    outputBounds=[-180, 0, -90, -90],
-                    outputSRS="WGS84",
-                    format="GTiff",
-                    creationOptions = ['COMPRESS=LZW'])
-            )
-    print("B2")
-    if(not path.exists(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.B2.tif"))):
-        gdal.Translate(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.B2.tif"),
-            path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.B2.png"),
-            options=gdal.TranslateOptions(resampleAlg="bilinear", \
-                    outputBounds=[-90, 0, 0, -90],
-                    outputSRS="WGS84",
-                    format="GTiff",
-                    creationOptions = ['COMPRESS=LZW'])
-            )    
-    print("C2")
-    if(not path.exists(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.C2.tif"))):
-        gdal.Translate(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.C2.tif"),
-            path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.C2.png"),
-            options=gdal.TranslateOptions(resampleAlg="bilinear", \
-                    outputBounds=[0, 0, 90, -90],
-                    outputSRS="WGS84",
-                    format="GTiff",
-                    creationOptions = ['COMPRESS=LZW'])
-            )    
-    print("D2")
-    if(not path.exists(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.D2.tif"))):
-        gdal.Translate(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.D2.tif"),
-            path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.D2.png"),
-            options=gdal.TranslateOptions(resampleAlg="bilinear", \
-                    outputBounds=[90, 0, 180, -90],
-                    outputSRS="WGS84",
-                    format="GTiff",
-                    creationOptions = ['COMPRESS=LZW'])
-            )    
+    # print("Wait for georeferencing of blue marble datasets...")
+    # print("A1")
+    # if(not path.exists(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.A1.tif"))):
+    #     gdal.Translate(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.A1.tif"),
+    #         path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.A1.png"),
+    #         options=gdal.TranslateOptions(resampleAlg="bilinear", \
+    #                 outputBounds=[-180, 90, -90, 0],
+    #                 outputSRS="WGS84",
+    #                 format="GTiff",
+    #                 creationOptions = ['COMPRESS=LZW'])
+    #         )
+    # print("B1")
+    # if(not path.exists(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.B1.tif"))):
+    #     gdal.Translate(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.B1.tif"),
+    #         path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.B1.png"),
+    #         options=gdal.TranslateOptions(resampleAlg="bilinear", \
+    #                 outputBounds=[-90, 90, 0, 0],
+    #                 outputSRS="WGS84",
+    #                 format="GTiff",
+    #                 creationOptions = ['COMPRESS=LZW'])
+    #         )
+    # print("C1")
+    # if(not path.exists(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.C1.tif"))):
+    #     gdal.Translate(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.C1.tif"),
+    #         path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.C1.png"),
+    #         options=gdal.TranslateOptions(resampleAlg="bilinear", \
+    #                 outputBounds=[0, 90, 90, 0],
+    #                 outputSRS="WGS84",
+    #                 format="GTiff",
+    #                 creationOptions = ['COMPRESS=LZW'])
+    #         )
+    # print("D1")
+    # if(not path.exists(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.D1.tif"))):
+    #     gdal.Translate(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.D1.tif"),
+    #         path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.D1.png"),
+    #         options=gdal.TranslateOptions(resampleAlg="bilinear", \
+    #                 outputBounds=[90, 90, 180, 0],
+    #                 outputSRS="WGS84",
+    #                 format="GTiff",
+    #                 creationOptions = ['COMPRESS=LZW'])
+    #         )
+    # print("A2")
+    # if(not path.exists(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.A2.tif"))):
+    #     gdal.Translate(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.A2.tif"),
+    #         path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.A2.png"),
+    #         options=gdal.TranslateOptions(resampleAlg="bilinear", \
+    #                 outputBounds=[-180, 0, -90, -90],
+    #                 outputSRS="WGS84",
+    #                 format="GTiff",
+    #                 creationOptions = ['COMPRESS=LZW'])
+    #         )
+    # print("B2")
+    # if(not path.exists(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.B2.tif"))):
+    #     gdal.Translate(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.B2.tif"),
+    #         path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.B2.png"),
+    #         options=gdal.TranslateOptions(resampleAlg="bilinear", \
+    #                 outputBounds=[-90, 0, 0, -90],
+    #                 outputSRS="WGS84",
+    #                 format="GTiff",
+    #                 creationOptions = ['COMPRESS=LZW'])
+    #         )    
+    # print("C2")
+    # if(not path.exists(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.C2.tif"))):
+    #     gdal.Translate(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.C2.tif"),
+    #         path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.C2.png"),
+    #         options=gdal.TranslateOptions(resampleAlg="bilinear", \
+    #                 outputBounds=[0, 0, 90, -90],
+    #                 outputSRS="WGS84",
+    #                 format="GTiff",
+    #                 creationOptions = ['COMPRESS=LZW'])
+    #         )    
+    # print("D2")
+    # if(not path.exists(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.D2.tif"))):
+    #     gdal.Translate(path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.D2.tif"),
+    #         path.join(inputDir,"Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.D2.png"),
+    #         options=gdal.TranslateOptions(resampleAlg="bilinear", \
+    #                 outputBounds=[90, 0, 180, -90],
+    #                 outputSRS="WGS84",
+    #                 format="GTiff",
+    #                 creationOptions = ['COMPRESS=LZW'])
+    #         )    
 
-    Gnomonic_Warp_Global([path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.A1.tif"), \
-        path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.B1.tif"),  \
-        path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.C1.tif"),  \
-        path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.D1.tif"),  \
-        path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.A2.tif"),  \
-        path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.B2.tif"),  \
-        path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.C2.tif"),  \
-        path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.D2.tif")],  \
+    Gnomonic_Warp_Global([path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.A1_geo.tif"), \
+        path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.B1_geo.tif"),  \
+        path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.C1_geo.tif"),  \
+        path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.D1_geo.tif"),  \
+        path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.A2_geo.tif"),  \
+        path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.B2_geo.tif"),  \
+        path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.C2_geo.tif"),  \
+        path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.D2_geo.tif")],  \
         6.378137e6, "earth_gnom", pbar, meters_per_pixel=blue_marble_mpp_22k * blue_marble_mpp_mult)
 
-
+    exit(0)
     
     if (False):
         print("Wait for georeferencing of blue marble cloud datasets...")
