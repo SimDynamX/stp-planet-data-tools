@@ -448,20 +448,20 @@ if __name__ == "__main__":
         Gnomonic_Warp([path.join("Moon","Local","SouthPole","JSC_ER7_LUNAR-SP_20cm_Site06-Nobile.tif")], \
             1737400.0, "moon_gnom", "SPole", pbar, meters_per_pixel=0.2, nodata_val=float_nodata)
     # Same area as above, lower res due to purely from laser altimetry
-    if (True):
+    if (False):
         Gnomonic_Warp([path.join("Moon","Local","SouthPole","Site06_final_adj_5mpp_surf.tif")], \
             1737400.0, "moon_gnom", "SPole", pbar, meters_per_pixel=5.0, nodata_val=float_nodata)
         
-    if (True):
+    if (False):
         Gnomonic_Warp([path.join("Moon","Local","SouthPole","Lunar_LROnac_Haworth_sfs-dem_1m_v3.tif")], \
             1737400.0, "moon_gnom", "SPole", pbar, meters_per_pixel=1.0, nodata_val=float_nodata)
 
-    if (True):
+    if (False):
         Gnomonic_Warp([path.join("Moon","Local","SouthPole","Site20v2_final_adj_5mpp_surf.tif")], \
             1737400.0, "moon_gnom", "SPole", pbar, meters_per_pixel=5.0, nodata_val=float_nodata)
 
     
-    if (True):
+    if (False):
         Gnomonic_Warp([path.join("Mars","Local","KaiserCrater","DTEED_039245_1325_039944_1325_A01.IMG")], \
             3396190.0, "mars_gnom", "SPole", pbar, meters_per_pixel=2.0, nodata_val=float_nodata)
         Gnomonic_Warp([path.join("Mars","Local","KaiserCrater","DTEEC_007110_1325_006820_1325_A01.IMG")], \
@@ -487,45 +487,48 @@ if __name__ == "__main__":
     # LROC dataset info: https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DOCUMENT/RDRSIS.PDF
 
     # Moon Global
-    Gnomonic_Warp_Global([path.join("Moon","Global","Lunar_LRO_LOLA_Global_LDEM_118m_Mar2014.tif")], \
-        1737400.0, "moon_gnom", pbar, meters_per_pixel=118)
-    Gnomonic_Warp_Global([path.join("Moon","Global","Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif")], \
-        1737400.0, "moon_gnom", pbar, meters_per_pixel=100 * DOWNSAMPLE_4X) # 4x downsampled because we're planning to phase out use anyway due to heavy shadows.
-    # https://data.lroc.im-ldi.com/lroc/view_rdr/WAC_HAPKE
+    if (False):
+        Gnomonic_Warp_Global([path.join("Moon","Global","Lunar_LRO_LOLA_Global_LDEM_118m_Mar2014.tif")], \
+            1737400.0, "moon_gnom", pbar, meters_per_pixel=118)
+        Gnomonic_Warp_Global([path.join("Moon","Global","Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif")], \
+            1737400.0, "moon_gnom", pbar, meters_per_pixel=100 * DOWNSAMPLE_4X) # 4x downsampled because we're planning to phase out use anyway due to heavy shadows.
+        # https://data.lroc.im-ldi.com/lroc/view_rdr/WAC_HAPKE
     
     # Need to have run the WAC_HAPKE_ReMerge.py script first to generate this file:
 
-    if(not path.exists(path.join(inputDir,"Moon","Global","RGB","WAC_HAPKE_3BAND_Merged.tiff"))):
-        subprocess.run(["python", "WAC_HAPKE_ReMerge.py"], check=True)
+    if (False):
+        if(not path.exists(path.join(inputDir,"Moon","Global","RGB","WAC_HAPKE_3BAND_Merged.tiff"))):
+            subprocess.run(["python", "WAC_HAPKE_ReMerge.py"], check=True)
 
-    Gnomonic_Warp_Global([path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_Merged.tiff")],
-        1737400.0, "moon_gnom", pbar, meters_per_pixel=400)
+        Gnomonic_Warp_Global([path.join("Moon","Global","RGB","WAC_HAPKE_3BAND_Merged.tiff")],
+            1737400.0, "moon_gnom", pbar, meters_per_pixel=400)
 
     # Also may want to look at https://data.lroc.im-ldi.com/lroc/view_rdr/WAC_EMP
 
-    # Moon Apollo Sites
-    Gnomonic_Warp([path.join("Moon","Local","Apollo17","APOLLO17_DTM_150CM.TIFF")], \
-        1737400.0, "moon_gnom", "Eq_0", pbar, meters_per_pixel=1.5, nodata_val=float_nodata)
-    Gnomonic_Warp([path.join("Moon","Local","Apollo17","APOLLO17_ORTHOMOSAIC_50CM.TIFF")], \
-        1737400.0, "moon_gnom", "Eq_0", pbar, meters_per_pixel=0.5)
-    Gnomonic_Warp([path.join("Moon","Local","Apollo15","LRO_NAC_DEM_Apollo_15_26N004E_150cmp.tif")], \
-        1737400.0, "moon_gnom", "Eq_0", pbar, meters_per_pixel=1.5 * DOWNSAMPLE_2X, nodata_val=float_nodata)
-    #     #TODO this ^ needs its nodata value set to our standardized value
-    Gnomonic_Warp([path.join("Moon","Local","Apollo15","Moon_LRO_NAC_Mosaic_26N004E_50cmp.tif")], \
-        1737400.0, "moon_gnom", "Eq_0", pbar, meters_per_pixel=0.5 * DOWNSAMPLE_4X) 
-        #TODO this ^ is giving an error partway through:
-        # ERROR 1: LZWDecode:Not enough data at scanline 47450 (short 53477 bytes)
-        # ERROR 1: TIFFReadEncodedStrip() failed.
-        # ERROR 1: C:\Users\conno\Documents\GitHub\PlanetDataTools\input\Moon\Local\Apollo15\Moon_LRO_NAC_Mosaic_26N004E_50cmp.tif,
-        #    band 1: IReadBlock failed at X offset 0, Y offset 47450: TIFFReadEncodedStrip() failed.
-    # Moon South Pole Altimetry
-    Gnomonic_Warp([path.join("Moon","Local","SouthPole","LRO_LOLA_DEM_SPolar875_10m.tif")], \
-        1737400.0, "moon_gnom", "SPole", pbar, meters_per_pixel=10, nodata_val=int16_nodata)
-    Gnomonic_Warp([path.join("Moon","Local","SouthPole","LRO_LOLA_DEM_SPole75_30m.tif")], \
-        1737400.0, "moon_gnom", "SPole", pbar, meters_per_pixel=30, nodata_val=int16_nodata)
-    Gnomonic_Warp([path.join("Moon","Local","SouthPole","MOON_LRO_NAC_DEM_89S210E_4mp.tif")], \
-        1737400.0, "moon_gnom", "SPole", pbar, meters_per_pixel=4, nodata_val=float_nodata)
-    if(True):
+    if (False):
+        # Moon Apollo Sites
+        Gnomonic_Warp([path.join("Moon","Local","Apollo17","APOLLO17_DTM_150CM.TIFF")], \
+            1737400.0, "moon_gnom", "Eq_0", pbar, meters_per_pixel=1.5, nodata_val=float_nodata)
+        Gnomonic_Warp([path.join("Moon","Local","Apollo17","APOLLO17_ORTHOMOSAIC_50CM.TIFF")], \
+            1737400.0, "moon_gnom", "Eq_0", pbar, meters_per_pixel=0.5)
+        Gnomonic_Warp([path.join("Moon","Local","Apollo15","LRO_NAC_DEM_Apollo_15_26N004E_150cmp.tif")], \
+            1737400.0, "moon_gnom", "Eq_0", pbar, meters_per_pixel=1.5 * DOWNSAMPLE_2X, nodata_val=float_nodata)
+        #     #TODO this ^ needs its nodata value set to our standardized value
+        Gnomonic_Warp([path.join("Moon","Local","Apollo15","Moon_LRO_NAC_Mosaic_26N004E_50cmp.tif")], \
+            1737400.0, "moon_gnom", "Eq_0", pbar, meters_per_pixel=0.5 * DOWNSAMPLE_4X) 
+            #TODO this ^ is giving an error partway through:
+            # ERROR 1: LZWDecode:Not enough data at scanline 47450 (short 53477 bytes)
+            # ERROR 1: TIFFReadEncodedStrip() failed.
+            # ERROR 1: C:\Users\conno\Documents\GitHub\PlanetDataTools\input\Moon\Local\Apollo15\Moon_LRO_NAC_Mosaic_26N004E_50cmp.tif,
+            #    band 1: IReadBlock failed at X offset 0, Y offset 47450: TIFFReadEncodedStrip() failed.
+        # Moon South Pole Altimetry
+        Gnomonic_Warp([path.join("Moon","Local","SouthPole","LRO_LOLA_DEM_SPolar875_10m.tif")], \
+            1737400.0, "moon_gnom", "SPole", pbar, meters_per_pixel=10, nodata_val=int16_nodata)
+        Gnomonic_Warp([path.join("Moon","Local","SouthPole","LRO_LOLA_DEM_SPole75_30m.tif")], \
+            1737400.0, "moon_gnom", "SPole", pbar, meters_per_pixel=30, nodata_val=int16_nodata)
+        Gnomonic_Warp([path.join("Moon","Local","SouthPole","MOON_LRO_NAC_DEM_89S210E_4mp.tif")], \
+            1737400.0, "moon_gnom", "SPole", pbar, meters_per_pixel=4, nodata_val=float_nodata)
+    if(False):
         # NASA internal upscaled crater 20cm dataset
         Gnomonic_Warp([path.join("Moon","Local","SouthPole","LDEM_Site01-Site-04_upscale_craters.tif")], \
             1737400.0, "moon_gnom", "SPole", pbar, meters_per_pixel=0.2, nodata_val=float_nodata)
@@ -537,238 +540,242 @@ if __name__ == "__main__":
     #     1737400.0, "moon_gnom", "SPole", pbar, 591)
 
     # Mars
-    Gnomonic_Warp_Global([path.join("Mars","Global","Mars_HRSC_MOLA_BlendDEM_Global_200mp_v2.tif")], \
-        3396190.0, "mars_gnom", pbar, meters_per_pixel=200)
-    # This one is "artisticly" colored, which doesn't look good in 3D and is not accurate.
-    # Disabled for now.
-    #Gnomonic_Warp_Global(path.join("Mars","Global","Mars_Viking_MDIM21_ClrMosaic_global_232m.tif"), \
-    #    3396190.0, "mars_gnom", pbar, meters_per_pixel=232)
-    # This one is at least close to color-accurate.
-    Gnomonic_Warp_Global([path.join("Mars","Global","Mars_Viking_ClrMosaic_global_925m.tif")], \
-        3396190.0, "mars_gnom", pbar, meters_per_pixel=925)
+    if (False):
+        Gnomonic_Warp_Global([path.join("Mars","Global","Mars_HRSC_MOLA_BlendDEM_Global_200mp_v2.tif")], \
+            3396190.0, "mars_gnom", pbar, meters_per_pixel=200)
+        # This one is "artisticly" colored, which doesn't look good in 3D and is not accurate.
+        # Disabled for now.
+        #Gnomonic_Warp_Global(path.join("Mars","Global","Mars_Viking_MDIM21_ClrMosaic_global_232m.tif"), \
+        #    3396190.0, "mars_gnom", pbar, meters_per_pixel=232)
+        # This one is at least close to color-accurate.
+        Gnomonic_Warp_Global([path.join("Mars","Global","Mars_Viking_ClrMosaic_global_925m.tif")], \
+            3396190.0, "mars_gnom", pbar, meters_per_pixel=925)
     
     # Global color mosaic 76 meters per pixel 
     # - https://www.sciencedirect.com/science/article/pii/S2095927324002949?via%3Dihub
     # - https://clpds.bao.ac.cn/web/enmanager/kxsj?missionName=HX1&zhName=MoRIC&grade=DOM-Global-76.0#none
     
     # Jezero
-    Gnomonic_Warp([path.join("Mars","Local","Jezero","J03_045994_1986_J03_046060_1986_20m_DTM.tif")], \
-        3396190.0, "mars_gnom", "Eq_90", pbar, meters_per_pixel=20, nodata_val=float_nodata)
-    Gnomonic_Warp([path.join("Mars","Local","Jezero","J03_045994_1986_XN_18N282W_6m_ORTHO.tif")], \
-        3396190.0, "mars_gnom", "Eq_90", pbar, meters_per_pixel=6)
-    Gnomonic_Warp([path.join("Mars","Local","Jezero","JEZ_hirise_soc_006_orthoMosaic_25cm_Eqc_latTs0_lon0_first.tif")], \
-        3396190.0, "mars_gnom", "Eq_90", pbar, meters_per_pixel=0.25 * DOWNSAMPLE_4X)
-    Gnomonic_Warp([path.join("Mars","Local","Jezero","DTEEC_045994_1985_046060_1985_U01.IMG")], \
-        3396190.0, "mars_gnom", "Eq_90", pbar, meters_per_pixel=1, nodata_val=float_nodata)
-    # Gale
-    Gnomonic_Warp([path.join("Mars","Local","Gale","MSL_Gale_DEM_Mosaic_1m_v3.tif")], \
-        3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=1 * DOWNSAMPLE_4X, nodata_val=float_nodata)
-    # InSight
-    Gnomonic_Warp([path.join("Mars","Local","InSight","D06_029601_1846_F05_037684_1857_20m_DTM_destripe.tif")], \
-        3396190.0, "mars_gnom", "Eq_90", pbar, meters_per_pixel=20, nodata_val=float_nodata)
-    Gnomonic_Warp([path.join("Mars","Local","InSight","D06_029601_1846_F05_037684_1857_20m_DTM_destripe.tif")], \
-        3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=20, nodata_val=float_nodata)
+    if (False):
+        Gnomonic_Warp([path.join("Mars","Local","Jezero","J03_045994_1986_J03_046060_1986_20m_DTM.tif")], \
+            3396190.0, "mars_gnom", "Eq_90", pbar, meters_per_pixel=20, nodata_val=float_nodata)
+        Gnomonic_Warp([path.join("Mars","Local","Jezero","J03_045994_1986_XN_18N282W_6m_ORTHO.tif")], \
+            3396190.0, "mars_gnom", "Eq_90", pbar, meters_per_pixel=6)
+        Gnomonic_Warp([path.join("Mars","Local","Jezero","JEZ_hirise_soc_006_orthoMosaic_25cm_Eqc_latTs0_lon0_first.tif")], \
+            3396190.0, "mars_gnom", "Eq_90", pbar, meters_per_pixel=0.25 * DOWNSAMPLE_4X)
+        Gnomonic_Warp([path.join("Mars","Local","Jezero","DTEEC_045994_1985_046060_1985_U01.IMG")], \
+            3396190.0, "mars_gnom", "Eq_90", pbar, meters_per_pixel=1, nodata_val=float_nodata)
+        # Gale
+        Gnomonic_Warp([path.join("Mars","Local","Gale","MSL_Gale_DEM_Mosaic_1m_v3.tif")], \
+            3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=1 * DOWNSAMPLE_4X, nodata_val=float_nodata)
+        # InSight
+        Gnomonic_Warp([path.join("Mars","Local","InSight","D06_029601_1846_F05_037684_1857_20m_DTM_destripe.tif")], \
+            3396190.0, "mars_gnom", "Eq_90", pbar, meters_per_pixel=20, nodata_val=float_nodata)
+        Gnomonic_Warp([path.join("Mars","Local","InSight","D06_029601_1846_F05_037684_1857_20m_DTM_destripe.tif")], \
+            3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=20, nodata_val=float_nodata)
+        
+        Gnomonic_Warp([path.join("Mars","Local","InSight","D18_034071_1842_D18_034216_1845_20m_DTM.tif")], \
+            3396190.0, "mars_gnom", "Eq_90", pbar, meters_per_pixel=20, nodata_val=float_nodata)
+        Gnomonic_Warp([path.join("Mars","Local","InSight","D18_034071_1842_D18_034216_1845_20m_DTM.tif")], \
+            3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=20, nodata_val=float_nodata)
+        
+        Gnomonic_Warp([path.join("Mars","Local","InSight","D18_034150_1838_D17_033728_1838_20m_DTM_destripe.tif")], \
+            3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=20, nodata_val=float_nodata)
+        Gnomonic_Warp([path.join("Mars","Local","InSight","D18_034427_1842_D17_033939_1843_20m_DTM.tif")], \
+            3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=20, nodata_val=float_nodata)
+        Gnomonic_Warp([path.join("Mars","Local","InSight","D19_034783_1864_D20_034928_1864_20m_DTM_destripe.tif")], \
+            3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=20, nodata_val=float_nodata)
+        Gnomonic_Warp([path.join("Mars","Local","InSight","F02_036695_1843_D02_028045_1831_20m_DTM_destripe.tif")], \
+            3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=20, nodata_val=float_nodata)
+        Gnomonic_Warp([path.join("Mars","Local","InSight","F02_036761_1828_F04_037262_1841_20m_DTM_destripe.tif")], \
+            3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=20, nodata_val=float_nodata)
     
-    Gnomonic_Warp([path.join("Mars","Local","InSight","D18_034071_1842_D18_034216_1845_20m_DTM.tif")], \
-        3396190.0, "mars_gnom", "Eq_90", pbar, meters_per_pixel=20, nodata_val=float_nodata)
-    Gnomonic_Warp([path.join("Mars","Local","InSight","D18_034071_1842_D18_034216_1845_20m_DTM.tif")], \
-        3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=20, nodata_val=float_nodata)
+    if (False):
+        # Tianwen-1 Color Segments"F:\SDX_ADATA\stp-planet-data-tools\input\Mars\Local\KaiserCrater\HX1_GRAS_MoRIC_DOM_076m_E05_48S023E_A.tif"
+        # Around Kaiser Crater area
+        # Gnomonic_Warp_Global([path.join("Mars","Local","KaiserCrater","HX1_GRAS_MoRIC_DOM_076m_E05_48S023E_A.tif")], \
+        #     3396190.0, "mars_gnom", pbar, meters_per_pixel=76)
+        Gnomonic_Warp([path.join("Mars","Local","KaiserCrater","HX1_GRAS_MoRIC_DOM_076m_E05_48S023E_A.tif")], \
+            3396190.0, "mars_gnom", "SPole", pbar, meters_per_pixel=76, input_nodata_val=0)
+        # Gnomonic_Warp([path.join("Mars","Local","KaiserCrater","HX1_GRAS_MoRIC_DOM_076m_E05_48S023E_A.tif")], \
+        #     3396190.0, "mars_gnom_Eq0", pbar, meters_per_pixel=76, 
+        #     warpoptions = gdal.WarpOptions( \
+        #             resampleAlg="bilinear", \
+        #             dstSRS=path.join(projDir, "mars_gnom_Eq0"),
+        #             outputBounds=[-radius_plus, -radius_plus, radius_plus, radius_plus],
+        #             xRes=76,
+        #             yRes=76,
+        #             srcNodata=None,
+        #             dstNodata=0,
+        #             format="GTiff",
+        #             creationOptions = ['COMPRESS=LZW'],
+        #             multithread=True,
+        #             callback=progress_callback,
+        #             callback_data=pbar \
+        #             ))
     
-    Gnomonic_Warp([path.join("Mars","Local","InSight","D18_034150_1838_D17_033728_1838_20m_DTM_destripe.tif")], \
-        3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=20, nodata_val=float_nodata)
-    Gnomonic_Warp([path.join("Mars","Local","InSight","D18_034427_1842_D17_033939_1843_20m_DTM.tif")], \
-        3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=20, nodata_val=float_nodata)
-    Gnomonic_Warp([path.join("Mars","Local","InSight","D19_034783_1864_D20_034928_1864_20m_DTM_destripe.tif")], \
-        3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=20, nodata_val=float_nodata)
-    Gnomonic_Warp([path.join("Mars","Local","InSight","F02_036695_1843_D02_028045_1831_20m_DTM_destripe.tif")], \
-        3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=20, nodata_val=float_nodata)
-    Gnomonic_Warp([path.join("Mars","Local","InSight","F02_036761_1828_F04_037262_1841_20m_DTM_destripe.tif")], \
-        3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=20, nodata_val=float_nodata)
-    
-    
-    # Tianwen-1 Color Segments"F:\SDX_ADATA\stp-planet-data-tools\input\Mars\Local\KaiserCrater\HX1_GRAS_MoRIC_DOM_076m_E05_48S023E_A.tif"
-    # Around Kaiser Crater area
-    # Gnomonic_Warp_Global([path.join("Mars","Local","KaiserCrater","HX1_GRAS_MoRIC_DOM_076m_E05_48S023E_A.tif")], \
-    #     3396190.0, "mars_gnom", pbar, meters_per_pixel=76)
-    Gnomonic_Warp([path.join("Mars","Local","KaiserCrater","HX1_GRAS_MoRIC_DOM_076m_E05_48S023E_A.tif")], \
-        3396190.0, "mars_gnom", "SPole", pbar, meters_per_pixel=76, input_nodata_val=0)
-    # Gnomonic_Warp([path.join("Mars","Local","KaiserCrater","HX1_GRAS_MoRIC_DOM_076m_E05_48S023E_A.tif")], \
-    #     3396190.0, "mars_gnom_Eq0", pbar, meters_per_pixel=76, 
-    #     warpoptions = gdal.WarpOptions( \
-    #             resampleAlg="bilinear", \
-    #             dstSRS=path.join(projDir, "mars_gnom_Eq0"),
-    #             outputBounds=[-radius_plus, -radius_plus, radius_plus, radius_plus],
-    #             xRes=76,
-    #             yRes=76,
-    #             srcNodata=None,
-    #             dstNodata=0,
-    #             format="GTiff",
-    #             creationOptions = ['COMPRESS=LZW'],
-    #             multithread=True,
-    #             callback=progress_callback,
-    #             callback_data=pbar \
-    #             ))
-    
-    # LavaFlows
-    Gnomonic_Warp([path.join("Mars","Local","LavaFlows","DEM_18m_Cerberus_Palus_wrinkle_ridge.tif")], \
-        3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=18, nodata_val=float_nodata)
-    Gnomonic_Warp([path.join("Mars","Local","LavaFlows","DEM_18m_Lethe_Vallis.tif")], \
-        3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=18, nodata_val=float_nodata)
-    Gnomonic_Warp([path.join("Mars","Local","LavaFlows","DEM_18m_N_Kasei_Valles_distal_flow.tif")], \
-        3396190.0, "mars_gnom", "Eq_270", pbar, meters_per_pixel=18, nodata_val=float_nodata)
-    Gnomonic_Warp([path.join("Mars","Local","LavaFlows","DEM_18m_North_Kasei_Valles_cataract.tif")], \
-        3396190.0, "mars_gnom", "Eq_270", pbar, meters_per_pixel=18, nodata_val=float_nodata)
-    Gnomonic_Warp([path.join("Mars","Local","LavaFlows","DEM_18m_NW_Kasei_Constriction.tif")], \
-        3396190.0, "mars_gnom", "Eq_270", pbar, meters_per_pixel=18, nodata_val=float_nodata)
-    # Misc datasets
-    Gnomonic_Warp([path.join("Mars","Local","Misc","B18_016575_1978_B17_016219_1978_20m_DTM.tif")], \
-        3396190.0, "mars_gnom", "Eq_90", pbar, meters_per_pixel=20, nodata_val=float_nodata)
-    Gnomonic_Warp([path.join("Mars","Local","Misc","D21_035237_2021_F01_036358_2020_20m_DTM.tif")], \
-        3396190.0, "mars_gnom", "Eq_0", pbar, meters_per_pixel=20, nodata_val=float_nodata)
-    Gnomonic_Warp([path.join("Mars","Local","Misc","F21_043907_1652_F21_043841_1654_20m_DTM.tif")], \
-        3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=20, nodata_val=float_nodata)
-    Gnomonic_Warp([path.join("Mars","Local","Misc","P14_006633_2018_P17_007556_2012_20m_DTM_destripe.tif")], \
-        3396190.0, "mars_gnom", "Eq_90", pbar, meters_per_pixel=20, nodata_val=float_nodata)
+    if (False):
+        # LavaFlows
+        Gnomonic_Warp([path.join("Mars","Local","LavaFlows","DEM_18m_Cerberus_Palus_wrinkle_ridge.tif")], \
+            3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=18, nodata_val=float_nodata)
+        Gnomonic_Warp([path.join("Mars","Local","LavaFlows","DEM_18m_Lethe_Vallis.tif")], \
+            3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=18, nodata_val=float_nodata)
+        Gnomonic_Warp([path.join("Mars","Local","LavaFlows","DEM_18m_N_Kasei_Valles_distal_flow.tif")], \
+            3396190.0, "mars_gnom", "Eq_270", pbar, meters_per_pixel=18, nodata_val=float_nodata)
+        Gnomonic_Warp([path.join("Mars","Local","LavaFlows","DEM_18m_North_Kasei_Valles_cataract.tif")], \
+            3396190.0, "mars_gnom", "Eq_270", pbar, meters_per_pixel=18, nodata_val=float_nodata)
+        Gnomonic_Warp([path.join("Mars","Local","LavaFlows","DEM_18m_NW_Kasei_Constriction.tif")], \
+            3396190.0, "mars_gnom", "Eq_270", pbar, meters_per_pixel=18, nodata_val=float_nodata)
+        # Misc datasets
+        Gnomonic_Warp([path.join("Mars","Local","Misc","B18_016575_1978_B17_016219_1978_20m_DTM.tif")], \
+            3396190.0, "mars_gnom", "Eq_90", pbar, meters_per_pixel=20, nodata_val=float_nodata)
+        Gnomonic_Warp([path.join("Mars","Local","Misc","D21_035237_2021_F01_036358_2020_20m_DTM.tif")], \
+            3396190.0, "mars_gnom", "Eq_0", pbar, meters_per_pixel=20, nodata_val=float_nodata)
+        Gnomonic_Warp([path.join("Mars","Local","Misc","F21_043907_1652_F21_043841_1654_20m_DTM.tif")], \
+            3396190.0, "mars_gnom", "Eq_180", pbar, meters_per_pixel=20, nodata_val=float_nodata)
+        Gnomonic_Warp([path.join("Mars","Local","Misc","P14_006633_2018_P17_007556_2012_20m_DTM_destripe.tif")], \
+            3396190.0, "mars_gnom", "Eq_90", pbar, meters_per_pixel=20, nodata_val=float_nodata)
 
     ########################
     ### WORK IN PROGRESS ###
     ########################
 
-    # Ceres
-    Gnomonic_Warp_Global([path.join("Ceres","Global","Ceres_Dawn_FC_HAMO_DTM_DLR_Global_60ppd_Oct2016.tif")], \
-        470000.0, "ceres_gnom", pbar, meters_per_pixel=142)
+    if (False):
+        # Ceres
+        Gnomonic_Warp_Global([path.join("Ceres","Global","Ceres_Dawn_FC_HAMO_DTM_DLR_Global_60ppd_Oct2016.tif")], \
+            470000.0, "ceres_gnom", pbar, meters_per_pixel=142)
 
 
-    # Mercury
-    Gnomonic_Warp_Global([path.join("Mercury","Global","Mercury_Messenger_USGS_DEM_Global_665m_v2.tif")], \
-        2439400, "mercury_gnom", pbar, meters_per_pixel=665)
-    Gnomonic_Warp_Global([path.join("Mercury","Global","Mercury_MESSENGER_MDIS_Basemap_LOI_Mosaic_Global_166m.tif")], \
-        2439400, "mercury_gnom", pbar, meters_per_pixel=166)
+        # Mercury
+        Gnomonic_Warp_Global([path.join("Mercury","Global","Mercury_Messenger_USGS_DEM_Global_665m_v2.tif")], \
+            2439400, "mercury_gnom", pbar, meters_per_pixel=665)
+        Gnomonic_Warp_Global([path.join("Mercury","Global","Mercury_MESSENGER_MDIS_Basemap_LOI_Mosaic_Global_166m.tif")], \
+            2439400, "mercury_gnom", pbar, meters_per_pixel=166)
 
-    # Phobos
-    Gnomonic_Warp_Global([path.join("Mars", "Phobos","Global","Phobos_Viking_Mosaic_40ppd_DLRcontrol.tif")], \
-        11100, "phobos_gnom", pbar, meters_per_pixel= 5.67)
-    Gnomonic_Warp_Global([path.join("Mars", "Phobos","Global","Phobos_ME_HRSC_DEM_Global_2ppd.tif")], \
-        11100, "phobos_gnom", pbar, meters_per_pixel=113)
+        # Phobos
+        Gnomonic_Warp_Global([path.join("Mars", "Phobos","Global","Phobos_Viking_Mosaic_40ppd_DLRcontrol.tif")], \
+            11100, "phobos_gnom", pbar, meters_per_pixel= 5.67)
+        Gnomonic_Warp_Global([path.join("Mars", "Phobos","Global","Phobos_ME_HRSC_DEM_Global_2ppd.tif")], \
+            11100, "phobos_gnom", pbar, meters_per_pixel=113)
 
-    # Vesta
-    Gnomonic_Warp_Global([path.join("Vesta","Global","Vesta_Dawn_HAMO_DTM_DLR_Global_48ppd_Altitude.tif")], \
-        2.55e5, "vesta_gnom", pbar, meters_per_pixel=93)
+        # Vesta
+        Gnomonic_Warp_Global([path.join("Vesta","Global","Vesta_Dawn_HAMO_DTM_DLR_Global_48ppd_Altitude.tif")], \
+            2.55e5, "vesta_gnom", pbar, meters_per_pixel=93)
 
-    # Io
-    Gnomonic_Warp_Global([path.join("Jupiter", "Io","Global","Io_GalileoSSI-Voyager_Global_Mosaic_ClrMerge_1km.tif")], \
-        1821600, "io_gnom", pbar, meters_per_pixel=1000)
-    # no info on local
-
-
-    # Europa
-    Gnomonic_Warp_Global([path.join("Jupiter", "Europa","Global","Europa_Voyager_GalileoSSI_global_mosaic_500m.tif")], \
-        1560800, "europa_gnom", pbar, meters_per_pixel=500)
+        # Io
+        Gnomonic_Warp_Global([path.join("Jupiter", "Io","Global","Io_GalileoSSI-Voyager_Global_Mosaic_ClrMerge_1km.tif")], \
+            1821600, "io_gnom", pbar, meters_per_pixel=1000)
+        # no info on local
 
 
-    # Ganymede
-    Gnomonic_Warp_Global([path.join("Jupiter", "Ganymede","Global","Ganymede_Voyager_GalileoSSI_Global_ClrMosaic_1435m.tif")], \
-        2634100, "ganymede_gnom", pbar, meters_per_pixel=1435)
+        # Europa
+        Gnomonic_Warp_Global([path.join("Jupiter", "Europa","Global","Europa_Voyager_GalileoSSI_global_mosaic_500m.tif")], \
+            1560800, "europa_gnom", pbar, meters_per_pixel=500)
 
 
-    # Enceladus
-    # These 4 here are old versions, replaced by the Schenk 2024 data
-    # Gnomonic_Warp_Global([path.join("Saturn", "Enceladus","Global","enceladus_2019pm_radius.tif")], \
-    #     252100, "enceladus_gnom", pbar, meters_per_pixel=2200)
-    # Gnomonic_Warp_Global([path.join("Saturn", "Enceladus","Global","Enceladus_Cassini_ISS_Global_Mosaic_100m_HPF.tif")], \
-    #     252100, "enceladus_gnom", pbar, meters_per_pixel=100)
-    # Gnomonic_Warp_Global([path.join("Saturn", "Enceladus","Global","enceladus_2019pm_nps_radius.tif")], \
-    #     252100, "enceladus_gnom", pbar, meters_per_pixel=2200)
-    # Gnomonic_Warp_Global([path.join("Saturn", "Enceladus","Global","enceladus_2019pm_sps_radius.tif")], \
-    #     252100, "enceladus_gnom", pbar, meters_per_pixel=2200)
-    
-    # convert from 16-bit to 8-bit and scale
-    # scale = 0.0001
-    scale = 255.0/22008.0 #TODO be more scientific; this is just the max value from the data
-    input_raster = path.join(inputDir, "Saturn", "Enceladus","Global","Enceladus_Cassini_mosaic_global_100m_schenk2024.tif")
-    output_raster = path.join(inputDir, "Saturn", "Enceladus","Global","Enceladus_Cassini_mosaic_global_100m_schenk2024_8b.tif")
-    convert_raster_32_8(input_raster, output_raster, scale, -3.40282265508890445e+38, 0)
-    Gnomonic_Warp_Global([path.join("Saturn", "Enceladus","Global","Enceladus_Cassini_mosaic_global_100m_schenk2024_8b.tif")], \
-        256200, "enceladus_gnom", pbar, meters_per_pixel=100)
-    Gnomonic_Warp_Global([path.join("Saturn", "Enceladus","Global","Enceladus_Cassini_DEM_global_200m_schenk2024.tif")], \
-        256200, "enceladus_gnom", pbar, meters_per_pixel=200)
-    # under TODO
-    # nps and sps are ancillary data and no context is given about mpp
+        # Ganymede
+        Gnomonic_Warp_Global([path.join("Jupiter", "Ganymede","Global","Ganymede_Voyager_GalileoSSI_Global_ClrMosaic_1435m.tif")], \
+            2634100, "ganymede_gnom", pbar, meters_per_pixel=1435)
 
 
-    # Titan
-    #Gnomonic_Warp_Global([path.join("Saturn", "Titan","Global","gtdr-data.zip")], \
-    #    2575150, "titan_gnom", pbar, meters_per_pixel=1000)
-    # no info on mpp
-    Gnomonic_Warp_Global([path.join("Saturn", "Titan","Global","Titan_ISS_Globe_65Sto45N_450M_AvgMos.tif")], \
-        2575150, "titan_gnom", pbar, meters_per_pixel=450)
-    Gnomonic_Warp_Global([path.join("Saturn", "Titan","Global","Titan_ISS_P19658_Mosaic_Global_4km.tif")], \
-        2575150, "titan_gnom", pbar, meters_per_pixel=4000)
+        # Enceladus
+        # These 4 here are old versions, replaced by the Schenk 2024 data
+        # Gnomonic_Warp_Global([path.join("Saturn", "Enceladus","Global","enceladus_2019pm_radius.tif")], \
+        #     252100, "enceladus_gnom", pbar, meters_per_pixel=2200)
+        # Gnomonic_Warp_Global([path.join("Saturn", "Enceladus","Global","Enceladus_Cassini_ISS_Global_Mosaic_100m_HPF.tif")], \
+        #     252100, "enceladus_gnom", pbar, meters_per_pixel=100)
+        # Gnomonic_Warp_Global([path.join("Saturn", "Enceladus","Global","enceladus_2019pm_nps_radius.tif")], \
+        #     252100, "enceladus_gnom", pbar, meters_per_pixel=2200)
+        # Gnomonic_Warp_Global([path.join("Saturn", "Enceladus","Global","enceladus_2019pm_sps_radius.tif")], \
+        #     252100, "enceladus_gnom", pbar, meters_per_pixel=2200)
+        
+        # convert from 16-bit to 8-bit and scale
+        # scale = 0.0001
+        scale = 255.0/22008.0 #TODO be more scientific; this is just the max value from the data
+        input_raster = path.join(inputDir, "Saturn", "Enceladus","Global","Enceladus_Cassini_mosaic_global_100m_schenk2024.tif")
+        output_raster = path.join(inputDir, "Saturn", "Enceladus","Global","Enceladus_Cassini_mosaic_global_100m_schenk2024_8b.tif")
+        convert_raster_32_8(input_raster, output_raster, scale, -3.40282265508890445e+38, 0)
+        Gnomonic_Warp_Global([path.join("Saturn", "Enceladus","Global","Enceladus_Cassini_mosaic_global_100m_schenk2024_8b.tif")], \
+            256200, "enceladus_gnom", pbar, meters_per_pixel=100)
+        Gnomonic_Warp_Global([path.join("Saturn", "Enceladus","Global","Enceladus_Cassini_DEM_global_200m_schenk2024.tif")], \
+            256200, "enceladus_gnom", pbar, meters_per_pixel=200)
+        # under TODO
+        # nps and sps are ancillary data and no context is given about mpp
 
 
-    # Dione
-    # add valid path
+        # Titan
+        #Gnomonic_Warp_Global([path.join("Saturn", "Titan","Global","gtdr-data.zip")], \
+        #    2575150, "titan_gnom", pbar, meters_per_pixel=1000)
+        # no info on mpp
+        Gnomonic_Warp_Global([path.join("Saturn", "Titan","Global","Titan_ISS_Globe_65Sto45N_450M_AvgMos.tif")], \
+            2575150, "titan_gnom", pbar, meters_per_pixel=450)
+        Gnomonic_Warp_Global([path.join("Saturn", "Titan","Global","Titan_ISS_P19658_Mosaic_Global_4km.tif")], \
+            2575150, "titan_gnom", pbar, meters_per_pixel=4000)
 
 
-    # Iapetus
-    # add valid path
+        # Dione
+        # add valid path
 
 
-    # Triton
-    Gnomonic_Warp_Global([path.join("Neptune", "Triton","Global","Triton_Voyager2_ClrMosaic_GlobalFill_600m.tif")], \
-        1353400, "triton_gnom", pbar, meters_per_pixel=600)
+        # Iapetus
+        # add valid path
 
 
-    # Pluto
-    Gnomonic_Warp_Global([path.join("Pluto","Global","Pluto_NewHorizons_Global_Mosaic_300m_Jul2017_8bit.tif")], \
-        1188300, "pluto_gnom", pbar, meters_per_pixel=300)
-    Gnomonic_Warp_Global([path.join("Pluto","Global","Pluto_NewHorizons_Global_DEM_300m_Jul2017_16bit.tif")], \
-        1188300, "pluto_gnom", pbar, meters_per_pixel=300)
+        # Triton
+        Gnomonic_Warp_Global([path.join("Neptune", "Triton","Global","Triton_Voyager2_ClrMosaic_GlobalFill_600m.tif")], \
+            1353400, "triton_gnom", pbar, meters_per_pixel=600)
+
+
+        # Pluto
+        Gnomonic_Warp_Global([path.join("Pluto","Global","Pluto_NewHorizons_Global_Mosaic_300m_Jul2017_8bit.tif")], \
+            1188300, "pluto_gnom", pbar, meters_per_pixel=300)
+        Gnomonic_Warp_Global([path.join("Pluto","Global","Pluto_NewHorizons_Global_DEM_300m_Jul2017_16bit.tif")], \
+            1188300, "pluto_gnom", pbar, meters_per_pixel=300)
 
     ########################
     ### WORK IN PROGRESS ###
     ########################
         
+    if (False):
+        # Venus
 
-    # Venus
+        if(not path.exists(path.join(inputDir,"Venus","Global","Topography","2DSignal312_625_50tol_0.01.tif"))):
+            if(path.exists(path.join(inputDir,"Venus","Global","Topography","2DSignal312_625_50tol_0.01.png"))):
+                gdal.Translate(path.join(inputDir,"Venus","Global","Topography","2DSignal312_625_50tol_0.01.tif"),
+                    path.join(inputDir,"Venus","Global","Topography","2DSignal312_625_50tol_0.01.png"),
+                    options=gdal.TranslateOptions(resampleAlg="bilinear", \
+                            outputBounds=[-180, 90, 180, -90],
+                            outputSRS=path.join(projDir, "venus_cyl.prj"),
+                            format="GTiff",
+                            noData=0,
+                            creationOptions = ['COMPRESS=LZW'])
+                    )    
 
-    if(not path.exists(path.join(inputDir,"Venus","Global","Topography","2DSignal312_625_50tol_0.01.tif"))):
-        if(path.exists(path.join(inputDir,"Venus","Global","Topography","2DSignal312_625_50tol_0.01.png"))):
-            gdal.Translate(path.join(inputDir,"Venus","Global","Topography","2DSignal312_625_50tol_0.01.tif"),
-                path.join(inputDir,"Venus","Global","Topography","2DSignal312_625_50tol_0.01.png"),
-                options=gdal.TranslateOptions(resampleAlg="bilinear", \
-                        outputBounds=[-180, 90, 180, -90],
-                        outputSRS=path.join(projDir, "venus_cyl.prj"),
-                        format="GTiff",
-                        noData=0,
-                        creationOptions = ['COMPRESS=LZW'])
-                )    
+        # Gnomonic_Warp_Global([path.join("Venus","Global","Topography","2DSignal312_625_50tol_0.01.tif")], \
+        #     6.0518e6, "venus_gnom", pbar, meters_per_pixel=2*3.14159265*6.051e6/625.0, input_nodata_val=0, nodata_val=0)
 
-    # Gnomonic_Warp_Global([path.join("Venus","Global","Topography","2DSignal312_625_50tol_0.01.tif")], \
-    #     6.0518e6, "venus_gnom", pbar, meters_per_pixel=2*3.14159265*6.051e6/625.0, input_nodata_val=0, nodata_val=0)
+        # if(not path.exists(path.join(inputDir,"Venus","Global","Topography","2DOriginal312_625_50.tif"))):
+        #     gdal.Translate(path.join(inputDir,"Venus","Global","Topography","2DOriginal312_625_50.tif"),
+        #         path.join(inputDir,"Venus","Global","Topography","2DOriginal312_625_50.png"),
+        #         options=gdal.TranslateOptions(resampleAlg="bilinear", \
+        #                 outputBounds=[-180, 90, 180, -90],
+        #                 outputSRS=path.join(projDir, "venus_cyl.prj"),
+        #                 format="GTiff",
+        #                 noData=0,
+        #                 creationOptions = ['COMPRESS=LZW'])
+        #         )    
 
-    # if(not path.exists(path.join(inputDir,"Venus","Global","Topography","2DOriginal312_625_50.tif"))):
-    #     gdal.Translate(path.join(inputDir,"Venus","Global","Topography","2DOriginal312_625_50.tif"),
-    #         path.join(inputDir,"Venus","Global","Topography","2DOriginal312_625_50.png"),
-    #         options=gdal.TranslateOptions(resampleAlg="bilinear", \
-    #                 outputBounds=[-180, 90, 180, -90],
-    #                 outputSRS=path.join(projDir, "venus_cyl.prj"),
-    #                 format="GTiff",
-    #                 noData=0,
-    #                 creationOptions = ['COMPRESS=LZW'])
-    #         )    
+        # Gnomonic_Warp_Global([path.join("Venus","Global","Topography","2DOriginal312_625_50.tif")], \
+        #     6.0518e6, "venus_gnom", pbar, meters_per_pixel=2*3.14159265*6.051e6/625.0, input_nodata_val=0, nodata_val=0)
 
-    # Gnomonic_Warp_Global([path.join("Venus","Global","Topography","2DOriginal312_625_50.tif")], \
-    #     6.0518e6, "venus_gnom", pbar, meters_per_pixel=2*3.14159265*6.051e6/625.0, input_nodata_val=0, nodata_val=0)
+        Gnomonic_Warp_Global([path.join("Venus","Global","Topography","Venus_Magellan_Topography_Global_4641m_v02.tif")], \
+            6.0518e6, "venus_gnom", pbar, meters_per_pixel=4641, nodata_val=int16_nodata)
 
-    Gnomonic_Warp_Global([path.join("Venus","Global","Topography","Venus_Magellan_Topography_Global_4641m_v02.tif")], \
-        6.0518e6, "venus_gnom", pbar, meters_per_pixel=4641, nodata_val=int16_nodata)
-
-    # Gnomonic_Warp_Global([path.join("Venus","Global","Venus_Magellan_C3-MDIR_Colorized_Global_Mosaic_4641m.tif")], \
-    #     6.0518e6, "venus_gnom", pbar, meters_per_pixel=4641) # Artist Colorized
-    
-    Gnomonic_Warp_Global([path.join("Venus","Global","Venus_Magellan_C3-MDIR_Global_Mosaic_2025m.tif")], \
-        6.0518e6, "venus_gnom", pbar, meters_per_pixel=2025)
+        # Gnomonic_Warp_Global([path.join("Venus","Global","Venus_Magellan_C3-MDIR_Colorized_Global_Mosaic_4641m.tif")], \
+        #     6.0518e6, "venus_gnom", pbar, meters_per_pixel=4641) # Artist Colorized
+        
+        Gnomonic_Warp_Global([path.join("Venus","Global","Venus_Magellan_C3-MDIR_Global_Mosaic_2025m.tif")], \
+            6.0518e6, "venus_gnom", pbar, meters_per_pixel=2025)
 
     # Earth
     
@@ -785,39 +792,42 @@ if __name__ == "__main__":
     blue_marble_mpp_11k = 927.55
 
     # https://earthobservatory.nasa.gov/features/NightLights
-    Gnomonic_Warp_Global([path.join("Earth","Global","BlackMarble","BlackMarble_2016_A1_geo_gray.tif"), \
-        path.join("Earth","Global","BlackMarble","BlackMarble_2016_B1_geo_gray.tif"),  \
-        path.join("Earth","Global","BlackMarble","BlackMarble_2016_C1_geo_gray.tif"),  \
-        path.join("Earth","Global","BlackMarble","BlackMarble_2016_D1_geo_gray.tif"),  \
-        path.join("Earth","Global","BlackMarble","BlackMarble_2016_A2_geo_gray.tif"),  \
-        path.join("Earth","Global","BlackMarble","BlackMarble_2016_B2_geo_gray.tif"),  \
-        path.join("Earth","Global","BlackMarble","BlackMarble_2016_C2_geo_gray.tif"),  \
-        path.join("Earth","Global","BlackMarble","BlackMarble_2016_D2_geo_gray.tif")], \
-        6.378137e6, "earth_gnom", pbar, meters_per_pixel=blue_marble_mpp_22k * blue_marble_mpp_mult)
+    if (False):
+        Gnomonic_Warp_Global([path.join("Earth","Global","BlackMarble","BlackMarble_2016_A1_geo_gray.tif"), \
+            path.join("Earth","Global","BlackMarble","BlackMarble_2016_B1_geo_gray.tif"),  \
+            path.join("Earth","Global","BlackMarble","BlackMarble_2016_C1_geo_gray.tif"),  \
+            path.join("Earth","Global","BlackMarble","BlackMarble_2016_D1_geo_gray.tif"),  \
+            path.join("Earth","Global","BlackMarble","BlackMarble_2016_A2_geo_gray.tif"),  \
+            path.join("Earth","Global","BlackMarble","BlackMarble_2016_B2_geo_gray.tif"),  \
+            path.join("Earth","Global","BlackMarble","BlackMarble_2016_C2_geo_gray.tif"),  \
+            path.join("Earth","Global","BlackMarble","BlackMarble_2016_D2_geo_gray.tif")], \
+            6.378137e6, "earth_gnom", pbar, meters_per_pixel=blue_marble_mpp_22k * blue_marble_mpp_mult)
 
     #https://visibleearth.nasa.gov/images/73934/topography
-    #scaled 0 to +6400 meters
-    Gnomonic_Warp_Global([path.join("Earth","Global","Topography","gebco_08_rev_elev_A1_grey_geo.tif"), \
-        path.join("Earth","Global","Topography","gebco_08_rev_elev_B1_grey_geo.tif"),  \
-        path.join("Earth","Global","Topography","gebco_08_rev_elev_C1_grey_geo.tif"),  \
-        path.join("Earth","Global","Topography","gebco_08_rev_elev_D1_grey_geo.tif"),  \
-        path.join("Earth","Global","Topography","gebco_08_rev_elev_A2_grey_geo.tif"),  \
-        path.join("Earth","Global","Topography","gebco_08_rev_elev_B2_grey_geo.tif"),  \
-        path.join("Earth","Global","Topography","gebco_08_rev_elev_C2_grey_geo.tif"),  \
-        path.join("Earth","Global","Topography","gebco_08_rev_elev_D2_grey_geo.tif")],  \
-        6.378137e6, "earth_gnom", pbar, meters_per_pixel=blue_marble_mpp_11k * blue_marble_mpp_mult)
+    if (False):
+        #scaled 0 to +6400 meters
+        Gnomonic_Warp_Global([path.join("Earth","Global","Topography","gebco_08_rev_elev_A1_grey_geo.tif"), \
+            path.join("Earth","Global","Topography","gebco_08_rev_elev_B1_grey_geo.tif"),  \
+            path.join("Earth","Global","Topography","gebco_08_rev_elev_C1_grey_geo.tif"),  \
+            path.join("Earth","Global","Topography","gebco_08_rev_elev_D1_grey_geo.tif"),  \
+            path.join("Earth","Global","Topography","gebco_08_rev_elev_A2_grey_geo.tif"),  \
+            path.join("Earth","Global","Topography","gebco_08_rev_elev_B2_grey_geo.tif"),  \
+            path.join("Earth","Global","Topography","gebco_08_rev_elev_C2_grey_geo.tif"),  \
+            path.join("Earth","Global","Topography","gebco_08_rev_elev_D2_grey_geo.tif")],  \
+            6.378137e6, "earth_gnom", pbar, meters_per_pixel=blue_marble_mpp_11k * blue_marble_mpp_mult)
 
     #https://visibleearth.nasa.gov/images/73963/bathymetry
-    #scaled -8000 to 0 meters
-    Gnomonic_Warp_Global([path.join("Earth","Global","Bathymetry","gebco_08_rev_bath_A1_grey_geo.tif"), \
-        path.join("Earth","Global","Bathymetry","gebco_08_rev_bath_B1_grey_geo.tif"),  \
-        path.join("Earth","Global","Bathymetry","gebco_08_rev_bath_C1_grey_geo.tif"),  \
-        path.join("Earth","Global","Bathymetry","gebco_08_rev_bath_D1_grey_geo.tif"),  \
-        path.join("Earth","Global","Bathymetry","gebco_08_rev_bath_A2_grey_geo.tif"),  \
-        path.join("Earth","Global","Bathymetry","gebco_08_rev_bath_B2_grey_geo.tif"),  \
-        path.join("Earth","Global","Bathymetry","gebco_08_rev_bath_C2_grey_geo.tif"),  \
-        path.join("Earth","Global","Bathymetry","gebco_08_rev_bath_D2_grey_geo.tif")],  \
-        6.378137e6, "earth_gnom", pbar, meters_per_pixel=blue_marble_mpp_11k * blue_marble_mpp_mult)
+    if (False):
+        #scaled -8000 to 0 meters
+        Gnomonic_Warp_Global([path.join("Earth","Global","Bathymetry","gebco_08_rev_bath_A1_grey_geo.tif"), \
+            path.join("Earth","Global","Bathymetry","gebco_08_rev_bath_B1_grey_geo.tif"),  \
+            path.join("Earth","Global","Bathymetry","gebco_08_rev_bath_C1_grey_geo.tif"),  \
+            path.join("Earth","Global","Bathymetry","gebco_08_rev_bath_D1_grey_geo.tif"),  \
+            path.join("Earth","Global","Bathymetry","gebco_08_rev_bath_A2_grey_geo.tif"),  \
+            path.join("Earth","Global","Bathymetry","gebco_08_rev_bath_B2_grey_geo.tif"),  \
+            path.join("Earth","Global","Bathymetry","gebco_08_rev_bath_C2_grey_geo.tif"),  \
+            path.join("Earth","Global","Bathymetry","gebco_08_rev_bath_D2_grey_geo.tif")],  \
+            6.378137e6, "earth_gnom", pbar, meters_per_pixel=blue_marble_mpp_11k * blue_marble_mpp_mult)
 
     # Georeference Blue Marble vis color PNGs then get gnomonic warps of them
     #TODO clouds
@@ -920,44 +930,45 @@ if __name__ == "__main__":
 
 
     
-    print("Wait for georeferencing of blue marble cloud datasets...")
-    print("West")
-    if(not path.exists(path.join(inputDir,"Earth","Global","Clouds","cloud.W.2001210.21600x21600.tif"))):
-        gdal.Translate(path.join(inputDir,"Earth","Global","Clouds","cloud.W.2001210.21600x21600.tif"),
-            path.join(inputDir,"Earth","Global","Clouds","cloud.W.2001210.21600x21600.png"),
-            options=gdal.TranslateOptions(resampleAlg="bilinear", \
-                    outputBounds=[-180, 90, 0, -90],
-                    outputSRS="WGS84",
-                    format="GTiff",
-                    creationOptions = ['COMPRESS=LZW'])
-            )
+    if (False):
+        print("Wait for georeferencing of blue marble cloud datasets...")
+        print("West")
+        if(not path.exists(path.join(inputDir,"Earth","Global","Clouds","cloud.W.2001210.21600x21600.tif"))):
+            gdal.Translate(path.join(inputDir,"Earth","Global","Clouds","cloud.W.2001210.21600x21600.tif"),
+                path.join(inputDir,"Earth","Global","Clouds","cloud.W.2001210.21600x21600.png"),
+                options=gdal.TranslateOptions(resampleAlg="bilinear", \
+                        outputBounds=[-180, 90, 0, -90],
+                        outputSRS="WGS84",
+                        format="GTiff",
+                        creationOptions = ['COMPRESS=LZW'])
+                )
 
-    print("East")
-    if(not path.exists(path.join(inputDir,"Earth","Global","Clouds","cloud.E.2001210.21600x21600.tif"))):
-        gdal.Translate(path.join(inputDir,"Earth","Global","Clouds","cloud.E.2001210.21600x21600.tif"),
-            path.join(inputDir,"Earth","Global","Clouds","cloud.E.2001210.21600x21600.png"),
-            options=gdal.TranslateOptions(resampleAlg="bilinear", \
-                    outputBounds=[0, 90, 180, -90],
-                    outputSRS="WGS84",
-                    format="GTiff",
-                    creationOptions = ['COMPRESS=LZW'])
-            )
+        print("East")
+        if(not path.exists(path.join(inputDir,"Earth","Global","Clouds","cloud.E.2001210.21600x21600.tif"))):
+            gdal.Translate(path.join(inputDir,"Earth","Global","Clouds","cloud.E.2001210.21600x21600.tif"),
+                path.join(inputDir,"Earth","Global","Clouds","cloud.E.2001210.21600x21600.png"),
+                options=gdal.TranslateOptions(resampleAlg="bilinear", \
+                        outputBounds=[0, 90, 180, -90],
+                        outputSRS="WGS84",
+                        format="GTiff",
+                        creationOptions = ['COMPRESS=LZW'])
+                )
 
-    Gnomonic_Warp_Global([path.join("Earth","Global","Clouds","cloud.W.2001210.21600x21600.tif"), \
-        path.join("Earth","Global","Clouds","cloud.E.2001210.21600x21600.tif")],  \
-        6.378137e6, "earth_gnom", pbar, meters_per_pixel=blue_marble_mpp_11k * blue_marble_mpp_mult)
+        Gnomonic_Warp_Global([path.join("Earth","Global","Clouds","cloud.W.2001210.21600x21600.tif"), \
+            path.join("Earth","Global","Clouds","cloud.E.2001210.21600x21600.tif")],  \
+            6.378137e6, "earth_gnom", pbar, meters_per_pixel=blue_marble_mpp_11k * blue_marble_mpp_mult)
 
+    if (False):
+        Gnomonic_Warp([path.join("Earth","Local","Grand Canyon","gc_dem.tif")], \
+            6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30, input_nodata_val=0, nodata_val=uint16_nodata)
 
-    Gnomonic_Warp([path.join("Earth","Local","Grand Canyon","gc_dem.tif")], \
-        6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30, input_nodata_val=0, nodata_val=uint16_nodata)
-
-    Gnomonic_Warp([path.join("Earth","Local","Hawaii","elevhii0100a.tif")], \
-        6.378137e6, "earth_gnom", "Eq_180", pbar, meters_per_pixel=100, nodata_val=int16_nodata)
-        
-    Gnomonic_Warp([path.join("Earth","Local","San Francisco Bay Area", "dem30m", "w001001.adf")], \
-        6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30, nodata_val=int16_nodata)
+        Gnomonic_Warp([path.join("Earth","Local","Hawaii","elevhii0100a.tif")], \
+            6.378137e6, "earth_gnom", "Eq_180", pbar, meters_per_pixel=100, nodata_val=int16_nodata)
+            
+        Gnomonic_Warp([path.join("Earth","Local","San Francisco Bay Area", "dem30m", "w001001.adf")], \
+            6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30, nodata_val=int16_nodata)
     
-    if False:
+    if (False):
         #677 is Everest; others are surroundings
         for i in range(642,647):
             Gnomonic_Warp([path.join("Earth","Local","Himalayas", f"HMA_DEM8m_MOS_20170716_tile-{i}.tif")], \
@@ -969,16 +980,16 @@ if __name__ == "__main__":
             Gnomonic_Warp([path.join("Earth","Local","Himalayas", f"HMA_DEM8m_MOS_20170716_tile-{i}.tif")], \
                 6.378137e6, "earth_gnom", "Eq_90", pbar, meters_per_pixel=8, nodata_val=float_nodata)
 
-    if True:
+    if (False):
         #677 is Everest; others are surroundings
         Gnomonic_Warp([path.join("Earth","Local","Himalayas", f"HMA_DEM8m_MOS_20170716_tile-677.tif")], \
             6.378137e6, "earth_gnom", "Eq_90", pbar, meters_per_pixel=8, nodata_val=float_nodata)
             
-    if False:
+    if (False):
         Gnomonic_Warp([path.join("Earth","Local","Caucasus", "dem_200_000.tif")], \
             6.378137e6, "earth_gnom", "NPole", pbar, meters_per_pixel=50, nodata_val=float_nodata)
         
-    if True:
+    if (False):
         Gnomonic_Warp([path.join("Earth","Local","Texas", "BigBend", "N29W104.hgt")], \
             6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30, nodata_val=int16_nodata)
 
@@ -1025,7 +1036,7 @@ if __name__ == "__main__":
         # Gnomonic_Warp([path.join("Earth","Local","Texas", "BigBend", "HLS.L30.T13RFN.2024255T172121.v2.0.B02.tif")], \
         #     6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30, nodata_val=int16_nodata)
 
-    if True:
+    if (False):
         # https://data.tnris.org/
         Gnomonic_Warp([path.join("Earth","Local","Texas", "BigBend", "ChisosMountains_2m.tif")], \
             6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=2, input_nodata_val=-1e6, nodata_val=float_nodata)
