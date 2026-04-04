@@ -425,10 +425,18 @@ if __name__ == "__main__":
     #                path.join("Earth", "Local", "Texas", "N29-30_W095-100","N30W099.hgt"), 
     #                path.join("Earth", "Local", "Texas", "N29-30_W095-100","N30W100.hgt")],
     #                6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=30, input_nodata_val=int16_nodata, nodata_val=int16_nodata)
-    Gnomonic_Warp([path.join("Earth", "Local", "KSC", "KSC_DEM.tif")], 6.378137e6, "earth_gnom", "Eq_270", 
-                  pbar, meters_per_pixel=2.5, input_nodata_val=-999999, nodata_val=float_nodata)
-    Gnomonic_Warp([path.join("Earth", "Local", "KSC", "KSC_Color.tif")], \
-            6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=2.0, input_nodata_val=0, nodata_val=0)
+
+    if (True):
+        Gnomonic_Warp([path.join("Earth", "Local", "KSC", "KSC_DEM.tif")], 6.378137e6, "earth_gnom", "Eq_270", 
+                    pbar, meters_per_pixel=2.5, input_nodata_val=-999999, nodata_val=float_nodata)
+        Gnomonic_Warp([path.join("Earth", "Local", "KSC", "KSC_Color.tif")], \
+                6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=2.0, input_nodata_val=0, nodata_val=0)
+        Gnomonic_Warp([path.join("Earth", "Local", "KSC", "KSC_Color_5m.tif")], \
+                6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=5.0, input_nodata_val=0, nodata_val=0)
+        Gnomonic_Warp([path.join("Earth", "Local", "KSC", "CanaveralSFS_Color_5m.tif")], \
+                6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=5.0, input_nodata_val=0, nodata_val=0)
+        Gnomonic_Warp([path.join("Earth", "Local", "KSC", "CentralFlorida_Color_100m.tif")], \
+                6.378137e6, "earth_gnom", "Eq_270", pbar, meters_per_pixel=100.0, input_nodata_val=0, nodata_val=0)
     
     # exit(0)
 
@@ -792,7 +800,7 @@ if __name__ == "__main__":
     blue_marble_mpp_11k = 927.6624
 
     # https://earthobservatory.nasa.gov/features/NightLights
-    if (False):
+    if (True):
         Gnomonic_Warp_Global([path.join("Earth","Global","BlackMarble","BlackMarble_2016_A1_geo_gray.tif"), \
             path.join("Earth","Global","BlackMarble","BlackMarble_2016_B1_geo_gray.tif"),  \
             path.join("Earth","Global","BlackMarble","BlackMarble_2016_C1_geo_gray.tif"),  \
@@ -918,15 +926,16 @@ if __name__ == "__main__":
     #                 creationOptions = ['COMPRESS=LZW'])
     #         )    
 
-    Gnomonic_Warp_Global([path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.A1_geo.tif"), \
-        path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.B1_geo.tif"),  \
-        path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.C1_geo.tif"),  \
-        path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.D1_geo.tif"),  \
-        path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.A2_geo.tif"),  \
-        path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.B2_geo.tif"),  \
-        path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.C2_geo.tif"),  \
-        path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.D2_geo.tif")],  \
-        6.378137e6, "earth_gnom", pbar, meters_per_pixel=blue_marble_mpp_22k * blue_marble_mpp_mult)
+    if (False):
+        Gnomonic_Warp_Global([path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.A1_geo.tif"), \
+            path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.B1_geo.tif"),  \
+            path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.C1_geo.tif"),  \
+            path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.D1_geo.tif"),  \
+            path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.A2_geo.tif"),  \
+            path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.B2_geo.tif"),  \
+            path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.C2_geo.tif"),  \
+            path.join("Earth","Global","BlueMarbleOctober","world.200410.3x21600x21600.D2_geo.tif")],  \
+            6.378137e6, "earth_gnom", pbar, meters_per_pixel=blue_marble_mpp_22k * blue_marble_mpp_mult)
 
     exit(0)
     
