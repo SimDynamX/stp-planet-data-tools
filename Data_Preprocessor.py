@@ -667,8 +667,10 @@ if __name__ == "__main__":
             11100, "phobos_gnom", pbar, meters_per_pixel=113)
 
         # Vesta
-        Gnomonic_Warp_Global([path.join("Vesta","Global","Vesta_Dawn_HAMO_DTM_DLR_Global_48ppd_Altitude.tif")], \
-            2.55e5, "vesta_gnom", pbar, meters_per_pixel=93)
+        if (True):
+            #NOTE: run Deflate_Vesta.py to get this one
+            Gnomonic_Warp_Global([path.join("Vesta","Global","Vesta_Dawn_HAMO_DTM_DLR_Global_48ppd.tif")], \
+                2.55e5, "vesta_gnom", pbar, meters_per_pixel=93)
 
         # Io
         Gnomonic_Warp_Global([path.join("Jupiter", "Io","Global","Io_GalileoSSI-Voyager_Global_Mosaic_ClrMerge_1km.tif")], \
