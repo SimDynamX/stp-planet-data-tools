@@ -669,7 +669,7 @@ if __name__ == "__main__":
         # Vesta
         if (True):
             #NOTE: run Deflate_Vesta.py to get this one
-            Gnomonic_Warp_Global([path.join("Vesta","Global","Vesta_Dawn_HAMO_DTM_DLR_Global_48ppd.tif")], \
+            Gnomonic_Warp_Global([path.join("Vesta","Global","Vesta_Dawn_HAMO_DTM_DLR_Global_48ppd_Altitude.tif")], \
                 2.55e5, "vesta_gnom", pbar, meters_per_pixel=93)
 
         # Io
