@@ -233,6 +233,11 @@ if __name__ == "__main__":
     DownloadIfNotExists(path.join("Moon","Local","SouthPole"),"https://astropedia.astrogeology.usgs.gov/download/Moon/LRO/LOLA/ancillary/LRO_LOLA_DEM_SPolar875_10m.tif")
     DownloadIfNotExists(path.join("Moon","Local","SouthPole"),"https://astropedia.astrogeology.usgs.gov/downloadBig/Moon/LRO/LOLA/ancillary/LRO_LOLA_DEM_SPole75_30m.tif")
     DownloadIfNotExists(path.join("Moon","Local","SouthPole"),"https://astropedia.astrogeology.usgs.gov/download/Moon/LRO/MOON_LRO_NAC_DEM_89S210E_4mp.tif")
+    
+    #TODO WAC HAPKE, etc
+    # https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/MDR/WAC_HAPKE/WAC_HAPKE_README.TXT
+    # https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/SDP/WAC_HAPKEPARAMMAP/WAC_HAPKEPARAMMAP_README.TXT
+    # https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/MDR/WAC_EMP/WAC_EMP_README.TXT
 
     #TODO GSFC-hosted landing site DEMs: https://pgda.gsfc.nasa.gov/products/78
 
